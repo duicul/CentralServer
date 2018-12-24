@@ -51,7 +51,7 @@ private String dbname,driver,uname,pass;
 			"jdbc:mysql://127.0.0.1:3306/"+dbname,uname,pass);  
 			//here sonoo is database name, root is username and password  
 			Statement stmt=con.createStatement();  
-			ResultSet rs=stmt.executeQuery("select op.PID, op.value from out_pins op  where op.Pin_No="+pin_no);  
+			ResultSet rs=stmt.executeQuery("select op.Pin_No, op.value from out_pins op  where op.Pin_No="+pin_no);  
 			while(rs.next())  
 			{
 			pin_num=rs.getInt(1);
@@ -63,6 +63,35 @@ private String dbname,driver,uname,pass;
 		return new PinOutput(pin_num,value);
 	}
 
+	@Override
+	public PinOutput getOutputPinbyPin_noUpdate(int pin_no) {
+		int pin_num=-1,value=-1;
+		try{  
+			Class.forName(this.driver);  
+			Connection con=DriverManager.getConnection(  
+			"jdbc:mysql://127.0.0.1:3306/"+dbname,uname,pass);  
+			//here sonoo is database name, root is username and password  
+			Statement stmt=con.createStatement();  
+			ResultSet rs=stmt.executeQuery("select op.Pin_No, op.value from out_pins op  where op.Pin_No="+pin_no);  
+			while(rs.next())  
+			{
+			pin_num=rs.getInt(1);
+			value=rs.getInt(2);
+				System.out.println(pin_num+" "+value);  
+			}con.close();  
+			}catch(Exception e){ System.out.println(e);return null;}  
+		try{  
+			Class.forName(this.driver);  
+			Connection con=DriverManager.getConnection(  
+			"jdbc:mysql://127.0.0.1:3306/"+dbname,uname,pass);  
+			//here sonoo is database name, root is username and password  
+			Statement stmt=con.createStatement();   
+			stmt.executeUpdate("UPDATE out_pins op SET op.CHANGED=FALSE where op.Pin_No="+pin_no);  
+			con.close();  
+			}catch(Exception e){ System.out.println(e);return null;}
+			  
+		return new PinOutput(pin_num,value);
+	}
 	
 	@Override
 	public PinInput getIntputPinbyPin_no(int pin_no) {
@@ -76,7 +105,7 @@ private String dbname,driver,uname,pass;
 			"jdbc:mysql://127.0.0.1:3306/"+dbname,uname,pass);  
 			//here sonoo is database name, root is username and password  
 			Statement stmt=con.createStatement();  
-			ResultSet rs=stmt.executeQuery("select ip.PID, ip.Value , ip.Sensor,ip.TimeStamp from in_pins ip where ip.Pin_No="+pin_no);  
+			ResultSet rs=stmt.executeQuery("select ip.Pin_No, ip.Value , ip.Sensor,ip.TimeStamp from in_pins ip where ip.Pin_No="+pin_no);  
 			while(rs.next())  
 			{
 			pin_num=rs.getInt(1);
@@ -228,6 +257,35 @@ private String dbname,driver,uname,pass;
 			  
 		return lp;
 	}
+	
+	public List<PinOutput> getPinsOutputChanged()
+	{int pin_num=-1,value=-1;
+	List<PinOutput> lp=new ArrayList<PinOutput>();
+	try{  
+		Class.forName(this.driver);  
+		Connection con=DriverManager.getConnection(  
+		"jdbc:mysql://127.0.0.1:3306/"+dbname,uname,pass);  
+		//here sonoo is database name, root is username and password  
+		Statement stmt=con.createStatement();  
+		ResultSet rs=stmt.executeQuery("select * from out_pins where changed=true");  
+		while(rs.next())  
+		{
+		pin_num=rs.getInt(1);
+		value=rs.getInt(2);
+			System.out.println(pin_num+" "+value); 
+			lp.add(new PinOutput(pin_num,value));
+		}con.close();  
+		}catch(Exception e){ System.out.println(e);return null;}  
+	try{  
+		Class.forName(this.driver);  
+		Connection con=DriverManager.getConnection(  
+		"jdbc:mysql://127.0.0.1:3306/"+dbname,uname,pass);  
+		//here sonoo is database name, root is username and password  
+		Statement stmt=con.createStatement();   
+		stmt.executeUpdate("UPDATE out_pins op SET op.CHANGED=FALSE ");  
+		con.close();  
+		}catch(Exception e){ System.out.println(e);return null;}
+	return lp;}
 
 	@Override
 	public List<PinInput> getPinsInput() {
