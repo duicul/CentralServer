@@ -43,6 +43,7 @@ public class InputPinsHandler implements HttpHandler {
 			System.out.println("|"+obj.toString()+"|");
 			if(!err){
 				for(int i=1;i<=20;i++){
+					try {
 						float value=(float) obj.getDouble(i+"");
 						PinInput pi;
 							pi = sd.getIntputPinbyPin_no(i);
@@ -50,7 +51,9 @@ public class InputPinsHandler implements HttpHandler {
 							if(pi!=null&p!=null)
 							{sd.insertInputPin(i, value,p.name,pi.sensor);
 							sd.updateInputPinValue(i, value);}
-				}
+					}catch(JSONException e) {
+						e.printStackTrace();}
+					}
 			}
 	    }
 	    catch (JSONException e) {

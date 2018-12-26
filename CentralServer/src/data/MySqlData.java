@@ -331,46 +331,29 @@ private String dbname,driver,uname,pass;
 
 	@Override
 	public void tunonOutputPin(int pin_no) {
-		try{  
-			Class.forName(this.driver);  
-			Connection con=DriverManager.getConnection(  
-			"jdbc:mysql://127.0.0.1:3306/"+dbname,uname,pass);  
-			//here sonoo is database name, root is username and password  
-			Statement stmt=con.createStatement(); 
-			stmt.executeUpdate("UPDATE out_pins SET value=1 WHERE Pin_No="+pin_no);
-			con.close();  
-			}catch(Exception e)
-		{ System.out.println(e);} 		
+		PinOutput po=this.getOutputPinbyPin_no(pin_no);
+		Pin p=this.getPin(pin_no);
+		if(po!=null&p!=null)
+		this.insertOutputPin(pin_no, 1, p.name);
+		
 	}
 
 	@Override
 	public void tunoffOutputPin(int pin_no) {
-		try{  
-			Class.forName(this.driver);  
-			Connection con=DriverManager.getConnection(  
-			"jdbc:mysql://127.0.0.1:3306/"+dbname,uname,pass);  
-			//here sonoo is database name, root is username and password  
-			Statement stmt=con.createStatement(); 
-			stmt.executeUpdate("UPDATE out_pins SET value=0 WHERE Pin_No="+pin_no);
-			con.close();  
-			}catch(Exception e)
-		{ System.out.println(e);}
+		PinOutput po=this.getOutputPinbyPin_no(pin_no);
+		Pin p=this.getPin(pin_no);
+		if(po!=null&p!=null)
+		this.insertOutputPin(pin_no, 0, p.name);
 		
 	}
 
 	@Override
 	public void toggleOutputPin(int pin_no) {
-		int value=this.getOutputPinbyPin_no(pin_no).value==0?1:0;
-		try{  
-			Class.forName(this.driver);  
-			Connection con=DriverManager.getConnection(  
-			"jdbc:mysql://127.0.0.1:3306/"+dbname,uname,pass);  
-			//here sonoo is database name, root is username and password  
-			Statement stmt=con.createStatement(); 
-			stmt.executeUpdate("UPDATE out_pins SET value="+value+" WHERE Pin_No="+pin_no);
-			con.close();  
-			}catch(Exception e)
-		{ System.out.println(e);}
+		PinOutput po=this.getOutputPinbyPin_no(pin_no);
+		Pin p=this.getPin(pin_no);
+		if(po!=null&p!=null)
+		{int value=this.getOutputPinbyPin_no(pin_no).value==0?1:0;
+		this.insertOutputPin(pin_no, value, p.name);}
 		
 	}
 }
