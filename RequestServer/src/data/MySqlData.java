@@ -2,7 +2,6 @@ package data;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
@@ -258,7 +257,7 @@ private String dbname,driver,uname,pass;
 		return lp;
 	}
 	
-	public List<PinOutput> getPinsOutputChanged()
+	public List<PinOutput> getPinsOutputChanged(boolean update)
 	{int pin_num=-1,value=-1;
 	List<PinOutput> lp=new ArrayList<PinOutput>();
 	try{  
@@ -276,6 +275,7 @@ private String dbname,driver,uname,pass;
 			lp.add(new PinOutput(pin_num,value));
 		}con.close();  
 		}catch(Exception e){ System.out.println(e);return null;}  
+	if(update) {
 	try{  
 		Class.forName(this.driver);  
 		Connection con=DriverManager.getConnection(  
@@ -284,7 +284,7 @@ private String dbname,driver,uname,pass;
 		Statement stmt=con.createStatement();   
 		stmt.executeUpdate("UPDATE out_pins op SET op.CHANGED=FALSE ");  
 		con.close();  
-		}catch(Exception e){ System.out.println(e);return null;}
+		}catch(Exception e){ System.out.println(e);return null;}}
 	return lp;}
 
 	@Override
@@ -315,8 +315,62 @@ private String dbname,driver,uname,pass;
 		return lp;
 	}
 
+	@Override
+	public void updateInputPinValue(int pin_no, float value) {
+		try{  
+			Class.forName(this.driver);  
+			Connection con=DriverManager.getConnection(  
+			"jdbc:mysql://127.0.0.1:3306/"+dbname,uname,pass);  
+			//here sonoo is database name, root is username and password  
+			Statement stmt=con.createStatement(); 
+			stmt.executeUpdate("UPDATE in_pins SET value="+value+" WHERE Pin_No="+pin_no);
+			con.close();  
+			}catch(Exception e)
+		{ System.out.println(e);} 		
+	}
 
+	@Override
+	public void tunonOutputPin(int pin_no) {
+		try{  
+			Class.forName(this.driver);  
+			Connection con=DriverManager.getConnection(  
+			"jdbc:mysql://127.0.0.1:3306/"+dbname,uname,pass);  
+			//here sonoo is database name, root is username and password  
+			Statement stmt=con.createStatement(); 
+			stmt.executeUpdate("UPDATE out_pins SET value=1 WHERE Pin_No="+pin_no);
+			con.close();  
+			}catch(Exception e)
+		{ System.out.println(e);} 		
+	}
 
-	
+	@Override
+	public void tunoffOutputPin(int pin_no) {
+		try{  
+			Class.forName(this.driver);  
+			Connection con=DriverManager.getConnection(  
+			"jdbc:mysql://127.0.0.1:3306/"+dbname,uname,pass);  
+			//here sonoo is database name, root is username and password  
+			Statement stmt=con.createStatement(); 
+			stmt.executeUpdate("UPDATE out_pins SET value=0 WHERE Pin_No="+pin_no);
+			con.close();  
+			}catch(Exception e)
+		{ System.out.println(e);}
+		
+	}
 
+	@Override
+	public void toggleOutputPin(int pin_no) {
+		int value=this.getOutputPinbyPin_no(pin_no).value==0?1:0;
+		try{  
+			Class.forName(this.driver);  
+			Connection con=DriverManager.getConnection(  
+			"jdbc:mysql://127.0.0.1:3306/"+dbname,uname,pass);  
+			//here sonoo is database name, root is username and password  
+			Statement stmt=con.createStatement(); 
+			stmt.executeUpdate("UPDATE out_pins SET value="+value+" WHERE Pin_No="+pin_no);
+			con.close();  
+			}catch(Exception e)
+		{ System.out.println(e);}
+		
+	}
 }

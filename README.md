@@ -1,7 +1,7 @@
 # CentralServer
 <h1> Communication protocol client -> server</h1><br>
 <table>
-<th>
+<tr>
 <td>
 Client
 </td>
