@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.sql.SQLException;
+
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import data.PinOutput;
@@ -32,10 +34,10 @@ private ServerData sd;
 	    is.close();
 	    br.close();
 	    isr.close();
-	    for(PinOutput po:sd.getPinsOutputChanged(false))
-	    	try {obj.put(po.pin_no+"",po.value);} 
-	    	catch (JSONException e) {
-	    		e.printStackTrace();}
+			for(PinOutput po:sd.getPinsOutputChanged(true))
+				try {obj.put(po.pin_no+"",po.value);} 
+				catch (JSONException e) {
+					e.printStackTrace();}
 	    
 	    System.out.println("|"+obj.toString()+"|");
 	    

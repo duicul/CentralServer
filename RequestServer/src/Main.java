@@ -11,7 +11,7 @@ public class Main {
 		sd.getPins();
 		sd.getPinsInput();
 		sd.getPinsOutput();
-		sd.insertInputPin(3,(float)11.2, "Termostat Cada", "DTH11 ");
+		sd.insertInputPin(3,(float)11.2, "Termostat Cada", "DTH11");
 		sd.insertOutputPin(5, 1, "Lumina baie");
 		sd.insertOutputPin(1, 0, "Lumina hol");
 		sd.tunonOutputPin(1);

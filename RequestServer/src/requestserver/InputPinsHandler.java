@@ -6,10 +6,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.sql.SQLException;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+
+import data.Pin;
+import data.PinInput;
 import data.ServerData;
 
 public class InputPinsHandler implements HttpHandler {
@@ -38,11 +43,13 @@ public class InputPinsHandler implements HttpHandler {
 			System.out.println("|"+obj.toString()+"|");
 			if(!err){
 				for(int i=1;i<=20;i++){
-					try {
 						float value=(float) obj.getDouble(i+"");
-						sd.updateInputPinValue(i, value);}
-					catch (JSONException e) {
-						e.printStackTrace();}
+						PinInput pi;
+							pi = sd.getIntputPinbyPin_no(i);
+							Pin p=sd.getPin(i);
+							if(pi!=null&p!=null)
+							{sd.insertInputPin(i, value,p.name,pi.sensor);
+							sd.updateInputPinValue(i, value);}
 				}
 			}
 	    }

@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.sql.SQLException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,19 +39,15 @@ public class PinsHnadler implements HttpHandler {
 	    is.close();
 	    br.close();
 	    isr.close();
-	    
-	    
-	    for(PinOutput po:sd.getPinsOutputChanged(false))
-	    	try {
-	    		out_obj.put(po.pin_no+"",po.value);} 
-	    	catch (JSONException e) {
-	    		e.printStackTrace();}
-	    
-	    for(PinInput po:sd.getPinsInput())
-	    	try {in_obj.put(po.pin_no+"",po.sensor);} 
-	    	catch (JSONException e) {   		
-	    		e.printStackTrace();}
-	    
+			for(PinOutput po:sd.getPinsOutputChanged(true))
+				try {
+					out_obj.put(po.pin_no+"",po.value);} 
+				catch (JSONException e) {
+					e.printStackTrace();}
+			for(PinInput po:sd.getPinsInput())
+				try {in_obj.put(po.pin_no+"",po.sensor);} 
+				catch (JSONException e) {   		
+					e.printStackTrace();}
 	    try {
 	    	obj.put("IN", in_obj.toString());} 
     	catch (JSONException e) {
