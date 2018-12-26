@@ -1,7 +1,7 @@
 # CentralServer
 <h1> Communication protocol client -> server</h1><br>
 <table>
-<tr>
+<th>
 <td>
 Client
 </td>
@@ -19,7 +19,8 @@ Client
 </td>
 </th>
 <tr>
-<td> 1s 
+<td>1s</td>
+<td>  
 </td>
 <td>  req=post(outputpinstatus)
 </td>
@@ -31,7 +32,8 @@ Client
 <td></td>
 </tr> 
 <tr>
-<td>60s
+<td>60s</td>
+<td>
 </td>
 <td>  req=post(pinstatus)
 </td>
