@@ -34,11 +34,22 @@ private ServerData sd;
 	    is.close();
 	    br.close();
 	    isr.close();
-			for(PinOutput po:sd.getPinsOutputChanged(true))
+	    int uid=-1;
+	    try {
+			obj = new JSONObject(buf);
+			System.out.println("|"+obj.toString()+"|");
+			if(obj.getString("data").equals("outputpins"))
+			uid=sd.getuid(obj.getString("user"), obj.getString("password"));
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} 
+			if(uid!=-1)
+			{for(PinOutput po:sd.getPinsOutputChanged(true, uid))
 				try {obj.put(po.pin_no+"",po.value);} 
 				catch (JSONException e) {
 					e.printStackTrace();}
-	    
+			}
 	    System.out.println("|"+obj.toString()+"|");
 	    
 	    
@@ -54,7 +65,7 @@ private ServerData sd;
 	    osw.close();
 	    os.flush();
 	    os.close();
-	    System.out.println("data sent "+buf);
+	    System.out.println("data sent "+buf+" uid="+uid);
 
 	}
 

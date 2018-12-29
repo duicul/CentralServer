@@ -27,7 +27,7 @@ public class ToggleOutputPin extends HttpServlet {
 		int pin_no=-1;
 		pin_no=Integer.parseInt(request.getParameter("pin_no"));
 		System.out.println(pin_no);
-		sd.toggleOutputPin(pin_no);
+		sd.toggleOutputPin(pin_no,1);
 	}
 
 }

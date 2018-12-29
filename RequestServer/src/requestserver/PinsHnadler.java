@@ -39,12 +39,23 @@ public class PinsHnadler implements HttpHandler {
 	    is.close();
 	    br.close();
 	    isr.close();
-			for(PinOutput po:sd.getPinsOutputChanged(true))
+	    int uid=-1;
+	    try {
+			obj = new JSONObject(buf);
+			System.out.println("|"+obj.toString()+"|");
+			if(obj.getString("data").equals("pins"))
+			uid=sd.getuid(obj.getString("user"), obj.getString("password"));
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} 
+	    if(uid!=-1)
+			{for(PinOutput po:sd.getPinsOutputChanged(true,1))
 				try {
 					out_obj.put(po.pin_no+"",po.value);} 
 				catch (JSONException e) {
 					e.printStackTrace();}
-			for(PinInput po:sd.getPinsInput())
+			for(PinInput po:sd.getPinsInput(1))
 				try {in_obj.put(po.pin_no+"",po.sensor);} 
 				catch (JSONException e) {   		
 					e.printStackTrace();}
@@ -57,7 +68,7 @@ public class PinsHnadler implements HttpHandler {
 	    	obj.put("OUT", out_obj.toString());} 
     	catch (JSONException e) {
     		e.printStackTrace();}
-	    
+			}
 	    
 	    System.out.println("|"+obj.toString()+"|");
 	    
@@ -74,7 +85,7 @@ public class PinsHnadler implements HttpHandler {
 	    os.flush();
 	    os.close();
 	    
-	    System.out.println("data sent "+buf);
+	    System.out.println("data sent "+buf+" uid="+uid);
 
 
 	}

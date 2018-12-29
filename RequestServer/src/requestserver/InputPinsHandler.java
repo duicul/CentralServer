@@ -38,19 +38,21 @@ public class InputPinsHandler implements HttpHandler {
 	    br.close();
 	    isr.close();
 	    JSONObject obj; 
+	    int uid=-1;
 	    try {
 			obj = new JSONObject(buf); 
 			System.out.println("|"+obj.toString()+"|");
-			if(!err){
+			uid=sd.getuid(obj.getString("user"),obj.getString("password"));
+			if(!err&&obj.getString("data").equals("inputpins")&&uid>0){
 				for(int i=1;i<=20;i++){
 					try {
 						float value=(float) obj.getDouble(i+"");
 						PinInput pi;
-							pi = sd.getIntputPinbyPin_no(i);
-							Pin p=sd.getPin(i);
+							pi = sd.getIntputPinbyPin_no(i,uid);
+							Pin p=sd.getPin(i,uid);
 							if(pi!=null&p!=null)
-							{sd.insertInputPin(i, value,p.name,pi.sensor);
-							sd.updateInputPinValue(i, value);}
+							{sd.insertInputPin(i, value,p.name,pi.sensor,uid);
+							/*sd.updateInputPinValue(i, value,uid);*/}
 					}catch(JSONException e) {
 						e.printStackTrace();}
 					}
@@ -76,7 +78,7 @@ public class InputPinsHandler implements HttpHandler {
 	    os.flush();
 	    os.close();
 
-	    System.out.println("data sent "+resp);
+	    System.out.println("data sent "+resp+" uid="+uid);
 
 	}
 

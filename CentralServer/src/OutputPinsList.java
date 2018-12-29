@@ -19,8 +19,8 @@ public class OutputPinsList extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ServerData sd=new MySqlData(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		String resp="";//"<!DOCTYPE html><html>";
-			for(PinOutput po:sd.getPinsOutput())
-				{Pin p=sd.getPin(po.pin_no);
+			for(PinOutput po:sd.getPinsOutput(1))
+				{Pin p=sd.getPin(po.pin_no,1);
 				if(p!=null)
 					resp+=po.pin_no+" "+p.name+" "+p.type+" "+"<button onclick=\"togglepin("+po.pin_no+")\">"+(po.value==0?"OFF":"ON")+"</button>"+"<br>";}
 		//resp+="</html>";
