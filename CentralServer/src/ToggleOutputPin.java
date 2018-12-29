@@ -6,6 +6,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import data.MySqlData;
 import data.ServerData;
@@ -23,11 +24,16 @@ public class ToggleOutputPin extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("toggleoutputpin");
+		HttpSession s=request.getSession();
+		if(s!=null&&s.getAttribute("user")!=null)
+		{int uid=(int) s.getAttribute("user_uid");
 		ServerData sd=new MySqlData(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		int pin_no=-1;
 		pin_no=Integer.parseInt(request.getParameter("pin_no"));
 		System.out.println(pin_no);
-		sd.toggleOutputPin(pin_no,1);
+		sd.toggleOutputPin(pin_no,uid);
+		
+		}
 	}
 
 }

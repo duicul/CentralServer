@@ -4,6 +4,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import data.MySqlData;
 import data.Pin;
 import data.PinOutput;
@@ -18,14 +20,18 @@ public class OutputPinsList extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ServerData sd=new MySqlData(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
-		String resp="";//"<!DOCTYPE html><html>";
-			for(PinOutput po:sd.getPinsOutput(1))
-				{Pin p=sd.getPin(po.pin_no,1);
+		HttpSession s=request.getSession();
+		if(s!=null&&s.getAttribute("user")!=null)
+		{int uid=(int) s.getAttribute("user_uid");
+		String resp="<span>";//"<!DOCTYPE html><html>";
+			for(PinOutput po:sd.getPinsOutput(uid))
+				{Pin p=sd.getPin(po.pin_no,uid);
 				if(p!=null)
-					resp+=po.pin_no+" "+p.name+" "+p.type+" "+"<button onclick=\"togglepin("+po.pin_no+")\">"+(po.value==0?"OFF":"ON")+"</button>"+"<br>";}
+					resp+="<p>"+po.pin_no+" "+p.name+" "+p.type+" "+"<button onclick=\"togglepin("+po.pin_no+")\">"+(po.value==0?"OFF":"ON")+"</button>"+"</p>";}
 		//resp+="</html>";
+			resp+="</span>";
 		response.getWriter().append(resp);}
-
+	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
