@@ -24,6 +24,7 @@ public class Logout extends HttpServlet {
 		HttpSession s;
 		if((s=request.getSession())!=null)
 				s.invalidate();
+		response.getWriter().append("<div></div>");
 	}
 
 

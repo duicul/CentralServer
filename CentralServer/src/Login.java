@@ -22,7 +22,7 @@ public class Login extends HttpServlet {
     }
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("get");
-		//response.getWriter().append(resp);
+		response.getWriter().append("<div></div>");
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ServerData sd=new MySqlData(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
@@ -38,6 +38,7 @@ public class Login extends HttpServlet {
 			{s.setAttribute("user", user);
 			s.setAttribute("user_uid", u.uid);}
 		System.out.println("User "+s.getAttribute("user")+" logged in");}
+		response.getWriter().append("<div></div>");
 	}
 
 }

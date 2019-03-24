@@ -1,3 +1,4 @@
+
 function loadoutputpinslist(){
   $.ajax({url:"/CentralServer/OutputPinsList",success : function(result)
      {$("#outputpinslist").html(result);}});  }
@@ -26,8 +27,10 @@ function logstatus()
 { $.ajax({url:"/CentralServer/LogStatus",success : function(result)
     {$("#logstatus").html(result);
     loadoutputpinslist();
-    loadinputpinslist();    
-    }}); }
+    loadinputpinslist();  
+    $("#loginform").submit(function( event ) { console.log("loginform");event.preventDefault();login();});
+    }});
+}
 
 function logout(){
 	$.ajax({url:"/CentralServer/Logout",success : function(result)
@@ -39,6 +42,6 @@ function logout(){
 function init(){
 	loadoutputpinslist();
 	loadinputpinslist();
-	setInterval(loadinputpinslist,15000);
+	setInterval(loadinputpinslist,30000);
 	logstatus();
 }

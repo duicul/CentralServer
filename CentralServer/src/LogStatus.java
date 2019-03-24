@@ -30,16 +30,23 @@ public class LogStatus extends HttpServlet {
 		String resp="";
 		System.out.println("Logstatus");
 		HttpSession s=request.getSession();
-		resp+="<p>";
+		resp+="<div>";
 		if(s==null||s.getAttribute("user")==null)
 		{s=request.getSession(true);
-		resp+="<input type=\"text\" id=\"user_txt\" width=\"30\"></input><br>";
-		resp+="<input type=\"password\" id=\"pass_txt\" width=\"30\"></input><br>";
-		resp+="<button onclick=\"login()\">Login</button><br>";}
+		//resp+="<div class=\"row\">";
+		resp+="<form class=\"form-inline\" id=\"loginform\">";
+		resp+="<div class=\"input-group\">";
+		resp+=/*"<div class=\"col\">"+*/"<input type=\"text\" class=\"form-control\" placeholder=\"UserName\" id=\"user_txt\" width=\"30\" />"/*+"</div>"*/;
+		resp+=/*"<div class=\"col\">"+*/"<input type=\"password\" class=\"form-control\" placeholder=\"Password\" id=\"pass_txt\" width=\"30\" />"/*+"</div>"*/;
+		resp+=/*"<div class=\"col\">"+*/"<input type=\"submit\" class=\"btn btn-primary\" value=\"Login\" />"/*+"</div>"*/;
+		resp+="</div></form>";
+		}
 		else
-		{resp+="Hello "+s.getAttribute("user")+"<br>";
-		resp+="<button onclick=\"logout()\">Logout</button><br>";}
-		resp+="</p>";
+		{resp+="<div class=\"input-group\">";
+		resp+="<font color=\"white\">Hello "+s.getAttribute("user")+"</font>";
+		resp+="<button onclick=\"logout()\" class=\"btn btn-primary\">Logout</button>";
+		resp+="</div>";}
+		resp+="</div>";
 		response.getWriter().append(resp);
 	}
 
