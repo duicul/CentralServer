@@ -107,26 +107,28 @@ private String dbname,driver,uname,pass;
 		Timestamp timestamp=null;
 		String value="";
 		String sensor = "";
+		String name="";
 		try{  
 			Class.forName(this.driver);  
 			Connection con=DriverManager.getConnection(  
 			"jdbc:mysql://127.0.0.1:3306/"+dbname,uname,pass);  
 			//here sonoo is database name, root is username and password  
 			Statement stmt=con.createStatement();  
-			ResultSet rs=stmt.executeQuery("select ip.Pin_No, ip.Value , ip.Sensor,ip.TimeStamp from in_pins ip where ip.Pin_No="+pin_no+" and ip.uid="+uid);  
+			ResultSet rs=stmt.executeQuery("select ip.Pin_No, ip.Value , ip.Sensor,ip.TimeStamp,p.NAME from in_pins ip , pins p  where p.Pin_No=ip.Pin_No and ip.Pin_No="+pin_no+" and ip.uid="+uid);  
 			if(rs.next())  
 			{
 			pin_num=rs.getInt(1);
 			value=rs.getString(2);
 			sensor=rs.getString(3);
 			timestamp=rs.getTimestamp(4);
+			name=rs.getString(5);
 				System.out.println(pin_num+" "+value+" "+sensor+" "+timestamp);  
 			}
 			else {con.close();return null;}
 			con.close();  
 			}catch(Exception e){ System.out.println(e);return null;}  
-			  
-		return new PinInput(pin_num,value,sensor,timestamp);
+		
+		return PinInput.create(pin_num,value,name,sensor,timestamp);
 	}
 
 	@Override
@@ -308,6 +310,7 @@ private String dbname,driver,uname,pass;
 		Timestamp timestamp=null;
 		String value="";
 		String sensor = "";
+		String name="";
 		List<PinInput> lp=new ArrayList<PinInput>();
 		try{  
 			Class.forName(this.driver);  
@@ -315,15 +318,18 @@ private String dbname,driver,uname,pass;
 			"jdbc:mysql://127.0.0.1:3306/"+dbname,uname,pass);  
 			//here sonoo is database name, root is username and password  
 			Statement stmt=con.createStatement();  
-			ResultSet rs=stmt.executeQuery("select * from in_pins where uid="+uid);  
+			ResultSet rs=stmt.executeQuery("select ip.Pin_No, ip.Value , ip.Sensor,ip.TimeStamp,p.NAME from in_pins ip , pins p  where p.Pin_No=ip.Pin_No and ip.uid="+uid);  
 			while(rs.next())  
 			{
-			pin_num=rs.getInt(2);
-			value=rs.getString(3);
-			sensor=rs.getString(4);
-			timestamp=rs.getTimestamp(5);
-				System.out.println(pin_num+" "+value+" "+sensor+" "+timestamp);  
-				lp.add(new PinInput(pin_num,value,sensor,timestamp));
+			pin_num=rs.getInt(1);
+			value=rs.getString(2);
+			sensor=rs.getString(3);
+			timestamp=rs.getTimestamp(4);
+			name=rs.getString(5);
+				System.out.println(pin_num+" "+value+" "+sensor+" "+timestamp+" "+name);  
+				PinInput piaux=PinInput.create(pin_num, value, name, sensor, timestamp);
+				if(piaux!=null)
+				lp.add(piaux);
 			}con.close();  
 			}catch(Exception e){ System.out.println(e);}  
 			  
