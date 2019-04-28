@@ -30,15 +30,12 @@ background-color:rgb(100,120,180);
 <div class="col-4" id="sensorgauges">
 </div>
 <div class="col-6 main_col">
+<div class="row" id="boxaddpins">Data</div><br>
 <div class="row" id="outputpinslist">Data</div>
 <br>
 <div class="row" id="inputpinslist">Data</div>
 <div id="graphdiv" style="height: 300px; width: 100%;"></div>
 <div id="test1"></div>
-
-<div id="trainingSteps" style="height: 300px; width: 100%;"></div>
-<div id="graph" style="height: 300px; width: 100%;"></div>
-
 </div>
 </div>
 

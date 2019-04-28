@@ -193,6 +193,9 @@ private String dbname,driver,uname,pass;
 			String comm="delete p,ip from in_pins ip inner join pins p on p.Pin_No=ip.Pin_No where p.type='IN' AND p.Pin_No="+pin_no+" AND p.uid="+uid+" AND ip.uid="+uid;
 			//System.out.println(comm);
 			stmt.executeUpdate(comm);
+			comm="delete ipl from in_pins_log ipl where ipl.Pin_No="+pin_no+" AND ipl.uid="+uid;
+			//System.out.println(comm);
+			stmt.executeUpdate(comm);
 			con.close();  
 			}catch(Exception e)
 		{ System.out.println(e);}  
@@ -326,7 +329,7 @@ private String dbname,driver,uname,pass;
 			sensor=rs.getString(3);
 			timestamp=rs.getTimestamp(4);
 			name=rs.getString(5);
-				//System.out.println(pin_num+" "+value+" "+sensor+" "+timestamp+" "+name);  
+				System.out.println("PinInputget "+pin_num+" "+value+" "+sensor+" "+timestamp+" "+name);  
 				PinInput piaux=PinInput.create(pin_num, value, name, sensor, timestamp);
 				if(piaux!=null)
 				lp.add(piaux);

@@ -40,6 +40,7 @@ public class InputPinLog extends HttpServlet {
 		if(s!=null&&s.getAttribute("user")!=null)
 		{int uid=sd.getUser(s.getAttribute("user").toString()).uid;
 		PinInput pi=sd.getIntputPinbyPin_no(pin_no,uid);
+		if(pi!=null)
 		response.getWriter().append(pi.drawGraph(uid));		
 		}
 		else  response.getWriter().append("error");

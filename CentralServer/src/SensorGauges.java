@@ -40,8 +40,14 @@ public class SensorGauges extends HttpServlet {
 		int uid=(int) s.getAttribute("user_uid");
 		String data="";
 		for(PinInput po:sd.getPinsInput(uid)) {
+			System.out.println(po.name);
+			//data+="<div class=\"row\">";
 			data+=po.name+"<br />";
-			data+=po.getGauge();}
+			data+=po.getGauge();
+			data+="<br />";
+			data+="<span class=\"btn btn-default\" onclick=removeinputpin("+po.pin_no+")>Remove "+po.name+"</span>";
+			data+="<br />";
+		}
 		data+="";
 		//System.out.println(data);
 		response.getWriter().append(data);
