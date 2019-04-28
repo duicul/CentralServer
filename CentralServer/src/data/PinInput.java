@@ -22,8 +22,10 @@ public abstract String getData();
 
 public abstract String getGauge();
 
+public abstract String drawGraph(int uid);
+
 public static PinInput create(int pin_no,String value,String name,String sensor,Timestamp timestamp) {
-	System.out.println("create "+name);
+	//System.out.println("create "+name);
 	if(sensor.equals("DHT11")||sensor.equals("DHT22"))
 	return new DHT(pin_no,value, name, sensor, timestamp);
 	else if(sensor.equals("PIR"))

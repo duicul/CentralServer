@@ -12,7 +12,7 @@ public class PIR extends PinInput {
 	@Override
 	public String getData() {
 		String resp="";
-		System.out.println("Sensor type |"+this.sensor+"|");
+		//System.out.println("Sensor type |"+this.sensor+"|");
 		if(this.sensor=="PIR")
 		resp+="<p>"+this.pin_no+" Last movement detected by "+this.name+" on "+this.timestamp+"</p>";
 	return resp;
@@ -21,6 +21,12 @@ public class PIR extends PinInput {
 	@Override
 	public String getGauge() {
 		return null;
+	}
+
+	@Override
+	public String drawGraph(int uid) {
+		// TODO Auto-generated method stub
+		return "";
 	}
 
 }

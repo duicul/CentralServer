@@ -22,9 +22,10 @@ public class Logout extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Logout");
 		HttpSession s;
+		response.setHeader("Content-type", "text/plain");
 		if((s=request.getSession())!=null)
-				s.invalidate();
-		response.getWriter().append("<div></div>");
+		{s.invalidate();}
+		response.getWriter().append("okay");
 	}
 
 

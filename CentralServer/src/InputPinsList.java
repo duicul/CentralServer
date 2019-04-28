@@ -36,7 +36,7 @@ public class InputPinsList extends HttpServlet {
 				System.out.println("Sensor type |"+pi.sensor+"|");
 				resp+=pi.getData();}}
 		 resp+="</div>";
-		 System.out.println(resp);
+		 //System.out.println(resp);
 		 response.getWriter().append(resp);
 	}
 }

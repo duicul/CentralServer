@@ -8,39 +8,50 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import data.DatabaseSetup;
+import data.MySqlData;
+import data.PinInput;
+import data.PinOutput;
+import data.ServerData;
+
 /**
- * Servlet implementation class LogStatus
+ * Servlet implementation class SensorGauges
  */
-@WebServlet("/LogStatus")
-public class LogStatus extends HttpServlet {
+@WebServlet("/SensorGauges")
+public class SensorGauges extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public LogStatus() {
+    public SensorGauges() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String resp="";
-		//System.out.println("Logstatus");
-		response.setHeader("Content-type", "text/plain");
 		HttpSession s=request.getSession();
+		response.setHeader("Content-type", "text/plain");
 		if(s==null||s.getAttribute("user")==null)
-		{s=request.getSession(true);
-		resp+="error";
-		}
-		else
-		{resp+=s.getAttribute("user");}
-		response.getWriter().append(resp);
+			return;
+		ServerData sd=new MySqlData(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
+		int uid=(int) s.getAttribute("user_uid");
+		String data="";
+		for(PinInput po:sd.getPinsInput(uid)) {
+			data+=po.name+"<br />";
+			data+=po.getGauge();}
+		data+="";
+		//System.out.println(data);
+		response.getWriter().append(data);
 	}
 
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 
