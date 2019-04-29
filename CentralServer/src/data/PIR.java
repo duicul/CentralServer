@@ -5,10 +5,8 @@ import java.util.Calendar;
 import java.util.List;
 
 public class PIR extends PinInput {
-public final  boolean active;
 	public PIR(int pin_no, String value, String name, String sensor, Timestamp timestamp) {
-		super(pin_no, value, name, sensor, timestamp);
-		active=(value.equals("1")?true:false);
+		super(pin_no, value, name, sensor, timestamp,value.equals("1")?true:false);
 		System.out.println("PIR Sensor pin "+this.pin_no+" "+this.value+"|"+this.active);
 	}
 

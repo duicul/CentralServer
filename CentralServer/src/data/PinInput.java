@@ -8,12 +8,14 @@ public final Timestamp timestamp;
 public final String value;
 public final String sensor;
 public final String name;
-public PinInput(int pin_no,String value,String name,String sensor,Timestamp timestamp)
+public final boolean active;
+public PinInput(int pin_no,String value,String name,String sensor,Timestamp timestamp,boolean active)
 {this.pin_no=pin_no;
 this.value=value;
 this.sensor=sensor;
 this.timestamp=timestamp;
-this.name=name;}
+this.name=name;
+this.active=active;}
 
 public String toString()
 {return "Pin input :"+this.pin_no+" "+this.sensor+" "+this.value+" "+this.timestamp;}
