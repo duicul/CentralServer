@@ -11,18 +11,19 @@ import javax.servlet.http.HttpSession;
 import data.DatabaseSetup;
 import data.MySqlData;
 import data.ServerData;
+import data.User;
 
 /**
- * Servlet implementation class AddInputPin
+ * Servlet implementation class SignUp
  */
-@WebServlet("/AddInputPin")
-public class AddInputPin extends HttpServlet {
+@WebServlet("/SignUp")
+public class SignUp extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddInputPin() {
+    public SignUp() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -31,23 +32,28 @@ public class AddInputPin extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ServerData sd=new MySqlData(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
-		HttpSession s=request.getSession();
-		response.setHeader("Content-type", "text/plain");
-		if(s!=null&&s.getAttribute("user")!=null)
-		{int uid=sd.getUser(s.getAttribute("user").toString()).uid;
-		sd.insertInputPinNoLog(Integer.parseInt(request.getParameter("pin").toString()),"0 0",request.getParameter("name").toString(),request.getParameter("sensor").toString(),uid);
-		response.getWriter().append("okay");
-		return;}
-		response.getWriter().append("error");
+		System.out.println("get");
+		response.getWriter().append("<div></div>");
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
+		ServerData sd=new MySqlData(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
+		System.out.println("SignUp");
+		String user=request.getParameter("user");
+		String pass=request.getParameter("password");
+		String email=request.getParameter("email");
+		String address=request.getParameter("address");
+		String phone=request.getParameter("phone");
+		String info=request.getParameter("info");
+		response.setHeader("Content-type", "text/plain");   
+		if(user!=null&&pass!=null) {
+		if(sd.signup(user, pass, email, address, phone, info)) {
+		response.getWriter().append("okay");
+		return;}
+		}
+		response.getWriter().append("error");}
 
 }

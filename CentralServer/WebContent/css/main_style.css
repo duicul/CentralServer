@@ -1,0 +1,6 @@
+@charset "ISO-8859-1";
+.pointer:hover {
+    cursor: pointer;
+}
+.row{width:100%;}
+.col{width:100%;}

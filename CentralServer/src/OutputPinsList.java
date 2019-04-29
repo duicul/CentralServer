@@ -29,7 +29,8 @@ public class OutputPinsList extends HttpServlet {
 			for(PinOutput po:sd.getPinsOutput(uid))
 				{Pin p=sd.getPin(po.pin_no,uid);
 				if(p!=null)
-					resp+="<p>"+po.pin_no+" "+p.name+" "+p.type+" "+"<button onclick=\"togglepin("+po.pin_no+")\">"+(po.value==0?"OFF":"ON")+"</button> "+" <button onclick=\"removeoutputpin("+po.pin_no+")\">"+"Remove "+p.name+"</button>"+"</p>";}
+					resp+="<p>"+po.pin_no+" "+p.name+" "+p.type+" "+"<button class=\"btn "+(po.value==0?"btn-secondary":"btn-warning")+" \" onclick=\"togglepin("+po.pin_no+")\">"+(po.value==0?"OFF":"ON")+"</button> "+" <button class=\"btn btn-danger\" onclick=\"removeoutputpin("+po.pin_no+")\">"+"Remove "+p.name+"</button>"+"</p>";}
+			
 		//resp+="</html>";
 		}
 		resp+="</div>";

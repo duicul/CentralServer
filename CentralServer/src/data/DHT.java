@@ -30,7 +30,7 @@ public final Double temp,humid;
 
 	@Override
 	public String getGauge() {
-		String temp = "<canvas data-type=\"radial-gauge\" onClick=\"inputpinlog("+this.pin_no+")\""
+		String temp = "<canvas data-type=\"radial-gauge\" class=\"pointer\" onClick=\"inputpinlog("+this.pin_no+")\""
 				+ "data-major-ticks=\"-10,-5,0,5,10,15,20,25,30,35,40,45,50\""
 				+" data-highlights='["
 				+"{ \"from\": -10, \"to\": 0, \"color\": \"rgba(10,50,220,1)\"},"
@@ -40,7 +40,7 @@ public final Double temp,humid;
 				+"{ \"from\": 40, \"to\": 50, \"color\": \"rgba(225,25,0,1)\" }]'"
 				+" data-color-numbers=\"red\" data-animated-value=\"true\" data-width=\"150\" data-height=\"150\""
 				+" data-value=\""+this.temp+"\" data-min-value=\"-10\" data-max-value=\"50\" data-units=\"C\"></canvas>";
-		String hum  = "<canvas data-type=\"radial-gauge\" onClick=\"inputpinlog("+this.pin_no+")\""
+		String hum  = "<canvas data-type=\"radial-gauge\" class=\"pointer\" onClick=\"inputpinlog("+this.pin_no+")\""
 				+" data-major-ticks=\"0,10,20,30,40,50,60,70,80,90,100\""
 				+" data-highlights='[{\"from\": 0, \"to\": 30, \"color\":\"rgba(0,0,200,1)\" },"
 				+"{\"from\": 30, \"to\": 70,\"color\":\"rgba(51,255,51,1)\" },"

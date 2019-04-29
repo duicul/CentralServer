@@ -1,34 +1,5 @@
-var loggedin=false;
+var loggedin;
 var refreshtime=30000;
-
-function drawchart(){
-	var training_steps=[];
-	training_steps.push({x:1,y:3});
-	training_steps.push({x:100,y:30});
-	var training_steps1=[];
-	training_steps1.push({x:10,y:30});
-	training_steps1.push({x:70,y:50});
-	var chart = new CanvasJS.Chart("trainingSteps", {
-		animationEnabled: true,
-		theme: "light2",
-		title:{
-			text: "ErrorOnSteps"
-		},
-		axisY:{
-			includeZero: true
-		},
-		data: [{        
-			type: "line",       
-			dataPoints: training_steps,
-			name : "Gogu",
-			showInLegend : true
-		},{        
-			type: "line",       
-			dataPoints: training_steps1
-		}]
-	});
-	chart.render();
-}
 
 function addinputpin(){
 	pin=$("#inp_pin_no").val()
@@ -40,7 +11,7 @@ function addinputpin(){
 	var retVal = confirm("Add input pin "+pin+" "+name);
     if( retVal == false ) {
        return;}
-	$.ajax({url:"http://localhost:8080/CentralServer/AddInputPin?pin="+pin+"&name="+name+"&sensor="+sensor,success : function(result)
+	$.ajax({url:"/CentralServer/AddInputPin?pin="+pin+"&name="+name+"&sensor="+sensor,success : function(result)
 	    {if(result=="error")
 	    	return;
         if(result=="okay"){
@@ -59,7 +30,7 @@ function addoutputpin(){
 	var retVal = confirm("Add output pin "+pin+" "+name);
     if( retVal == false ) {
        return;}
-		$.ajax({url:"http://localhost:8080/CentralServer/AddOutputPin?pin="+pin+"&name="+name,success : function(result)
+		$.ajax({url:"/CentralServer/AddOutputPin?pin="+pin+"&name="+name,success : function(result)
 		    {if(result=="error")
 		    	return;
 	        if(result=="okay"){
@@ -74,7 +45,7 @@ function removeinputpin(pin_no){
      if( retVal == false ) {
         return;}
 	console.log("removeinputpin"+pin_no)
-	$.ajax({url:"http://localhost:8080/CentralServer/RemoveInputPin?pin="+pin_no,success : function(result)
+	$.ajax({url:"/CentralServer/RemoveInputPin?pin="+pin_no,success : function(result)
 	    {if(result=="error")
 	    	return;
         if(result=="okay"){
@@ -89,7 +60,7 @@ function removeoutputpin(pin_no){
      if( retVal == false ) {
         return;}
 	console.log("removeoutputpin"+pin_no)
-	$.ajax({url:"http://localhost:8080/CentralServer/RemoveOutputPin?pin="+pin_no,success : function(result)
+	$.ajax({url:"/CentralServer/RemoveOutputPin?pin="+pin_no,success : function(result)
 	    {if(result=="error")
 	    	return;
         if(result=="okay"){
@@ -99,23 +70,60 @@ function removeoutputpin(pin_no){
 	}});
 }
 
+function signup(){
+	var formData = new FormData();
+	var xmlhttp = new XMLHttpRequest();
+	var url = "/CentralServer/SignUp";
+	var user=$("#user_txt_signup").val();
+	var password=$("#pass_txt_signup").val();
+	var email=$("#email_txt_signup").val();
+	var address=$("#address_txt_signup").val();
+	var phone=$("#phone_txt_signup").val();
+	var info=$("#info_txt_signup").val();
+	regex=new RegExp(".+@.+\..+")
+	if(!regex.test(email)){
+		alert("Wrong Email format")
+		return;
+	}
+		
+	$.post(url,
+			  {"user": user,
+			   "password":password,
+			   "email": email,
+			   "address":address,
+			   "phone": phone,
+			   "info":info},
+			  function(data, status){
+				  logstatus();
+				  if(data=="okay"){ console.log("signup");}
+				  else alert("Wrong Username/Password");
+				  //location.reload();
+			  });	
+	
+}
+
 function loadoutputpinslist(){
-  $.ajax({url:"http://localhost:8080/CentralServer/OutputPinsList",success : function(result)
+  $.ajax({url:"/CentralServer/OutputPinsList",success : function(result)
      {$("#outputpinslist").html(result);}});  }
 
 function togglepin(pin_no){
-	  $.ajax({url:"http://localhost:8080/CentralServer/ToggleOutputPin?pin_no="+pin_no,success : function(result)
+	  $.ajax({url:"/CentralServer/ToggleOutputPin?pin_no="+pin_no,success : function(result)
 		     {loadoutputpinslist();}});}
+
+function toggleinputpin(pin_no){
+	  $.ajax({url:"/CentralServer/ToggleInputPin?pin_no="+pin_no,success : function(result)
+		     {sensorgauges();}});}
+
 function loadinputpinslist(pin_no){
-	$.ajax({url:"http://localhost:8080/CentralServer/InputPinsList",success : function(result)
+	$.ajax({url:"/CentralServer/InputPinsList",success : function(result)
 	     {$("#inputpinslist").html(result);}}); 
 	if(loggedin==true)
 		setTimeout(loadinputpinslist,refreshtime);}
 
-function login(user,password)
+function login()
 {var formData = new FormData();
 var xmlhttp = new XMLHttpRequest();
-var url = "http://localhost:8080/CentralServer/Login";
+var url = "/CentralServer/Login";
 var user=$("#user_txt").val();
 var password=$("#pass_txt").val();
 $.post(url,
@@ -127,15 +135,14 @@ $.post(url,
 				  loggedin=true;
 				  console.log("loggedin");}
 			  else alert("Wrong Username/Password");
-			  //location.reload();
-		  });
-boxaddpins();}
+		  });}
 
 function logstatus()
-{ $.ajax({url:"http://localhost:8080/CentralServer/LogStatus",success : function(result)
+{ $.ajax({url:"/CentralServer/LogStatus",success : function(result)
     {status=""
 	if(result=="error"){
-    status="<script>loggedin=false</script><form class=\"form-inline\" id=\"loginform\">";
+	console.log("logstatus error")
+    status="<form class=\"form-inline\" id=\"loginform\">";
 	status+="<div class=\"input-group\">";
 	status+="<input type=\"text\" class=\"form-control\" placeholder=\"UserName\" id=\"user_txt\" width=\"30\" />"/*+"</div>"*/;
 	status+="<input type=\"password\" class=\"form-control\" placeholder=\"Password\" id=\"pass_txt\" width=\"30\" />"/*+"</div>"*/;
@@ -143,41 +150,50 @@ function logstatus()
 	status+="</div></form>";
 	loggedin=false;
 	}
-    else
-	{loggedin=true;boxaddpins();
+    else{
+    console.log("logstatus okay")
+    loggedin=true;
+	boxaddpins_signup();
 	status+="<div class=\"mr-auto navbar-nav\"><div class=\"mr-auto navbar-brand\"> Hello "+result+"</div></div>";
 	status+="<button onclick=\"logout()\" class=\"btn btn-primary mr-sm-2\">Logout</button>";}
 	$("#logstatus").html(status);
 	loadoutputpinslist();
 	loadinputpinslist();
-	sensorgauges();
+	sensorgauges(true);
     $("#loginform").submit(function( event ) { console.log("loginform");event.preventDefault();login();});
+    $("#signupform").submit(function( event ) { console.log("signupform");event.preventDefault();signup();});
     },
     dataType: "text"});
-boxaddpins();
+console.log(loggedin)
 }
 
 function logout(){
-	$.ajax({url:"http://localhost:8080/CentralServer/Logout",success : function(result)
+	$.ajax({url:"/CentralServer/Logout",success : function(result)
 	    {logstatus();
 	    if(result=="okay"){
 	    	loggedin=false;
-	    	console.log("loggedout");}
+	    	init()
+	    	console.log("loggedout");
+	    	//location.reload()
+	    	$("#graphdiv").css("width","")
+	    	$("#graphdiv").css("height","")
+	    	$("#graphdiv").html("")
+	    }
 	    }});
-	boxaddpins();
 }
 
 function inputpinlog(pin){
 	/*if(loggedin==false)
 		return;*/
-	$.ajax({url:"http://localhost:8080/CentralServer/InputPinLog?pin="+pin,success : function(result)
+	$("#graphdiv").css("width","100%")
+	$("#graphdiv").css("height","300px")
+	$.ajax({url:"/CentralServer/InputPinLog?pin="+pin,success : function(result)
 	    {if(result=="error")
 	    	return;
 		//$("#graph").html(result)
 		//console.log(eval(result))
 		var chart = new CanvasJS.Chart("graphdiv", {
 			animationEnabled: true,
-			theme: "light2",
 			title:{
 				text: "SensorData"
 			},
@@ -191,53 +207,67 @@ function inputpinlog(pin){
 	    });
 }
 
-function sensorgauges()
-{$.ajax({url:"http://localhost:8080/CentralServer/SensorGauges",success : function(result)
-    {$("#sensorgauges").html(result);},
-    dataType: "text"
-	}
-	);
-	if(loggedin==true)
-		setTimeout(sensorgauges,refreshtime);
+function sensorgauges(repeat){
+	if(loggedin==true){
+		refresh="<i class=\"fas fa-sync pointer\" onclick=\"sensorgauges()\">Refresh</i><br/> "
+		$.ajax({url:"/CentralServer/SensorGauges",success : function(result){
+			$("#sensorgauges").html(refresh+result);}
+		});
+		console.log("sensor gauges "+loggedin+" "+repeat)
+		if(repeat==true){
+			console.log("sensor gauges repeat")
+			setTimeout(function(){sensorgauges(true);},refreshtime);
+		}
+	}else $("#sensorgauges").html("");
 }
 
-function boxaddpins(){
+function boxaddpins_signup(){
 	var data_pins="";
 	if(loggedin==true){
 	data_pins+="<div class=\"row\">"
 	data_pins+="<div class=\"col\">"
-	data_pins+="<input type=\"text\" placeholder=\"Name\" id=\"inp_pin_name\"/>";
-	data_pins+="<select id=\"inp_pin_no\">";
+	data_pins+="<input type=\"text\" placeholder=\"Name\" id=\"inp_pin_name\"/> ";
+	data_pins+=" <select id=\"inp_pin_no\">";
 	for(var i=2;i<=26;i++)
 		 data_pins+="<option value=\""+i+"\">"+i+"</option>"
-	data_pins+="</select>"
+	data_pins+="</select> "
 	sensors=["DHT11","DHT22","PIR"]
-	data_pins+="<select id=\"inp_pin_sensor\">"
+	data_pins+=" <select id=\"inp_pin_sensor\">"
 	for(i in sensors)
 			 data_pins+="<option value=\""+sensors[i]+"\">"+sensors[i]+"</option>"
-	data_pins+="</select>"
-	data_pins+="<input type=\"button\" onclick=\"addinputpin()\" value=\"Addinputpin\"></button>"
-	data_pins+="</div></div>"
-		
+	data_pins+="</select> "
+	data_pins+=" <input type=\"button\" class=\"btn btn-success\" onclick=\"addinputpin()\" value=\"Addinputpin\"></button>"
 	data_pins+="<div class=\"row\">"
 	data_pins+="<div class=\"col\">"
-	data_pins+="<input type=\"text\" placeholder=\"Name\" id=\"out_pin_name\"/>";
-	data_pins+="<select id=\"out_pin_no\">";
+	data_pins+="<input type=\"text\" placeholder=\"Name\" id=\"out_pin_name\"/> ";
+	data_pins+=" <select id=\"out_pin_no\">";
 	for(var i=2;i<=26;i++)
 		 data_pins+="<option value=\""+i+"\">"+i+"</option>"
 	data_pins+="</select>"
-	data_pins+="<input type=\"button\" onclick=\"addoutputpin()\" value=\"Addoutputpin\"></button>"	
+	data_pins+=" <input type=\"button\" class=\"btn btn-success\" onclick=\"addoutputpin()\" value=\"Addoutputpin\"></button>"	
 	data_pins+="</div></div>"
+	}
+	else{
+	data_pins="<script>loggedin=false</script><form class=\"form-inline\" id=\"signupform\">";
+    data_pins+="<div class=\"input-group\">";
+    data_pins+="<input type=\"text\" class=\"form-control\" placeholder=\"UserName\" id=\"user_txt_signup\" width=\"30\" />";
+	data_pins+="<input type=\"password\" class=\"form-control\" placeholder=\"Password\" id=\"pass_txt_signup\" width=\"30\" />";
+	data_pins+="<input type=\"text\" class=\"form-control\" placeholder=\"e-mail\" id=\"email_txt_signup\" width=\"30\" />";
+	data_pins+="<input type=\"text\" class=\"form-control\" placeholder=\"Address\" id=\"address_txt_signup\" width=\"30\" />";
+	data_pins+="<input type=\"text\" class=\"form-control\" placeholder=\"Phone\" id=\"phone_txt_signup\" width=\"30\" />";
+	data_pins+="<input type=\"text\" class=\"form-control\" placeholder=\"Info\" id=\"info_txt_signup\" width=\"30\" />";
+	data_pins+="<br />";
+	data_pins+="<input type=\"submit\" class=\"btn btn-primary\" value=\"SignUp\" />";
+	data_pins+="</div></form>";
+		
 	}
 	$("#boxaddpins").html(data_pins);
 }
 function init(){
+	loggedin=false;
 	logstatus();
-	sensorgauges();
 	loadinputpinslist();
 	loadoutputpinslist();
-	//drawchart();
-	boxaddpins();
-	//inputpinlog(5);
-	//$('#test1').html('<canvas data-type="radial-gauge" data-width="200" data-height="150" data-value="20.2" data-min-value="-10" data-max-value="50" data-title="°C"></canvas>');
+	boxaddpins_signup();
+	sensorgauges(true);
 }

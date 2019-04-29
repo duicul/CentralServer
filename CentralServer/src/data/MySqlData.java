@@ -133,6 +133,12 @@ private String dbname,driver,uname,pass;
 
 	@Override
 	public void insertInputPin(int pin_no, String value, String name, String sensor,int uid) {
+		this.insertInputPinNoLog(pin_no, value, name, sensor, uid);
+		this.addInputPinLog(pin_no, value, name, sensor, uid);
+	}
+
+	@Override
+	public void insertInputPinNoLog(int pin_no, String value, String name, String sensor, int uid) {
 		this.removePinByPin_no(pin_no,uid);
 		try{  
 			Class.forName(this.driver);  
@@ -154,9 +160,9 @@ private String dbname,driver,uname,pass;
 			con.close();   
 			}catch(Exception e)
 		{ System.out.println(e);}
-		this.addInputPinLog(pin_no, value, name, sensor, uid);
+		
 	}
-
+	
 	@Override
 	public void insertOutputPin(int pin_no, int value, String name,int uid) {
 		this.removePinByPin_no(pin_no,uid);
@@ -339,8 +345,34 @@ private String dbname,driver,uname,pass;
 		return lp;
 	}
 
+	public void updateInputPinValueLogtimestamp(int pin_no, String value,int uid) {
+		this.updateInputPinValueNoLogtimestamp(pin_no, value, uid);
+		Pin p=this.getPin(pin_no, uid);
+		PinInput pi=this.getIntputPinbyPin_no(pin_no, uid);
+		this.addInputPinLog(pin_no, value, p.name, pi.sensor, uid);
+	}
 	@Override
-	public void updateInputPinValue(int pin_no, String value,int uid) {
+	public void updateInputPinValueNoLogtimestamp(int pin_no, String value,int uid) {
+		try{  
+			Class.forName(this.driver);  
+			Connection con=DriverManager.getConnection(  
+			"jdbc:mysql://127.0.0.1:3306/"+dbname,uname,pass);  
+			//here sonoo is database name, root is username and password  
+			Statement stmt=con.createStatement(); 
+			stmt.executeUpdate("UPDATE in_pins SET value='"+value+"' , TimeStamp=CURRENT_TIMESTAMP WHERE Pin_No="+pin_no+" and uid="+uid);
+			con.close();  
+			}catch(Exception e)
+		{ System.out.println(e);} 
+	}
+
+	public void updateInputPinValueLogNotimestamp(int pin_no, String value,int uid) {
+		this.updateInputPinValueNoLogNotimestamp(pin_no, value, uid);
+		Pin p=this.getPin(pin_no, uid);
+		PinInput pi=this.getIntputPinbyPin_no(pin_no, uid);
+		this.addInputPinLog(pin_no, value, p.name, pi.sensor, uid);
+	}
+	@Override
+	public void updateInputPinValueNoLogNotimestamp(int pin_no, String value,int uid) {
 		try{  
 			Class.forName(this.driver);  
 			Connection con=DriverManager.getConnection(  
@@ -351,11 +383,8 @@ private String dbname,driver,uname,pass;
 			con.close();  
 			}catch(Exception e)
 		{ System.out.println(e);} 
-		Pin p=this.getPin(pin_no, uid);
-		PinInput pi=this.getIntputPinbyPin_no(pin_no, uid);
-		this.addInputPinLog(pin_no, value, p.name, pi.sensor, uid);
 	}
-
+	
 	@Override
 	public void tunonOutputPin(int pin_no,int uid) {
 		PinOutput po=this.getOutputPinbyPin_no(pin_no,uid);
@@ -435,6 +464,7 @@ private String dbname,driver,uname,pass;
 	
 	@Override
 	public void addInputPinLog(int pin_no, String value, String name, String sensor, int uid) {
+		System.out.println("Add input pin log");
 		try{  
 			Class.forName(this.driver);  
 			Connection con=DriverManager.getConnection(  
@@ -506,5 +536,7 @@ private String dbname,driver,uname,pass;
 		
 		return inputpinlog;
 	}
+
+	
 
 }
