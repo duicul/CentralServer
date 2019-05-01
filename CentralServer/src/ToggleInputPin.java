@@ -42,10 +42,7 @@ public class ToggleInputPin extends HttpServlet {
 			pin_no=Integer.parseInt(request.getParameter("pin_no"));
 			//System.out.println(pin_no);
 			PIR pir=(PIR)sd.getIntputPinbyPin_no(pin_no, uid);
-			boolean val=pir.active;
-			if(val)
-			sd.updateInputPinValueLogNotimestamp(pin_no,"0", uid);
-			else sd.updateInputPinValueNoLogNotimestamp(pin_no,"1", uid);
+			sd.updateInputPinValueNoLogNotimestamp(pin_no,pir.active?"0":"1", uid);
 			//response.getWriter().append("<div></div>");
 				}
 	}

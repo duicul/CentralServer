@@ -31,7 +31,7 @@ public class InputPinsList extends HttpServlet {
 		String resp="<div>";
 		if(s!=null&&s.getAttribute("user")!=null){
 			int uid=(int) s.getAttribute("user_uid");
-			System.out.println(sd.getPinsInput(uid).size()+" input pins");
+			System.out.println(uid+" "+sd.getPinsInput(uid).size()+" input pins");
 			for(PinInput pi:sd.getPinsInput(uid)){
 				System.out.println("Sensor type |"+pi.sensor+"|");
 				resp+=pi.getData();}}

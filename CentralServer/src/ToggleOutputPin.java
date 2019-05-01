@@ -26,6 +26,7 @@ public class ToggleOutputPin extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//System.out.println("toggleoutputpin");
 		HttpSession s=request.getSession();
+		response.setHeader("Content-type", "text/plain");
 		if(s!=null&&s.getAttribute("user")!=null)
 		{int uid=(int) s.getAttribute("user_uid");
 		ServerData sd=new MySqlData(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);

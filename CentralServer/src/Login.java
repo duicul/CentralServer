@@ -35,13 +35,14 @@ public class Login extends HttpServlet {
 		System.out.println(request.getMethod()+" Logging "+user);
 		if(user!=null&&pass!=null) {
 		User u=sd.getUser(user, pass);
-		if(u!=null)
-			{s.setAttribute("user", user);
-			s.setAttribute("user_uid", u.uid);}
-		//System.out.println("User "+s.getAttribute("user")+" logged in");
-		response.getWriter().append("okay");
+		if(u!=null){
+			s.setAttribute("user", user);
+			s.setAttribute("user_uid", u.uid);
+			response.getWriter().append("okay");}
+		return;
 		}
-		
+		response.getWriter().append("error");
+		//System.out.println("User "+s.getAttribute("user")+" logged in");
 	}
 
 }

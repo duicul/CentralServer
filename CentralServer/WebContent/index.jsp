@@ -25,29 +25,33 @@ background-color:rgb(100,120,180);
 <meta charset="ISO-8859-1">
 <title>Central Server</title>
 </head>
-<body onload="init()">
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="logstatus">
+<body style="background-color: #eeeeee" onload="init()">
+<nav class="navbar navbar-expand-lg navbar-white " style="background-color: #cccccc" id="logstatus">
 </nav>
+<div class="row"><div class="col"  style="height:1em ; background-color: #ffffff"></div></div>
 <div class="row">
 <div class="col-4">
 <div  id="sensorgauges">
 </div>
 </div>
-<div class="col-8 main_col">
+<div class="col-8 bg-info">
+
 <div class="row">
-<div class="col" id="boxaddpins"></div></div>
+<div class="col" id="boxaddpins"></div>
+</div>
+
 <div class="row">
-<div class="col">
-<div class="row" id="outputpinslist"></div>
-</div></div>
+<div class="col" id="outputpinslist"></div>
+</div>
+<hr/>
 <div class="row">
-<div class="col">
-<div class="row" id="inputpinslist"></div>
-</div></div>
+<div class="col" id="inputpinslist"></div>
+</div>
+
 <div class="row">
-<div class="col">
-<div id="graphdiv"></div>
-</div></div>
+<div class="col" id="graphdiv"></div>
+</div>
+
 <div id="test1"></div>
 </div>
 </div>

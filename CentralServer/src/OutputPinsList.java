@@ -22,18 +22,20 @@ public class OutputPinsList extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ServerData sd=new MySqlData(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		HttpSession s=request.getSession();
-		String resp="<div>";
+		String resp="";
+		response.setHeader("Content-type", "text/plain");
 		if(s!=null&&s.getAttribute("user")!=null)
 		{int uid=(int) s.getAttribute("user_uid");
 		//"<!DOCTYPE html><html>";
 			for(PinOutput po:sd.getPinsOutput(uid))
 				{Pin p=sd.getPin(po.pin_no,uid);
-				if(p!=null)
-					resp+="<p>"+po.pin_no+" "+p.name+" "+p.type+" "+"<button class=\"btn "+(po.value==0?"btn-secondary":"btn-warning")+" \" onclick=\"togglepin("+po.pin_no+")\">"+(po.value==0?"OFF":"ON")+"</button> "+" <button class=\"btn btn-danger\" onclick=\"removeoutputpin("+po.pin_no+")\">"+"Remove "+p.name+"</button>"+"</p>";}
-			
-		//resp+="</html>";
+				if(p!=null){
+					resp+="<div class=\"row\">";
+					resp+="<div class=\"col\">"+po.pin_no+" "+p.name+"</div>";
+					resp+="<div class=\"col\">"+"<button class=\"btn "+(po.value==0?"btn-secondary":"btn-warning")+" \" onclick=\"togglepin("+po.pin_no+")\">"+(po.value==0?"OFF":"ON")+"</button></div>";
+					resp+="<div class=\"col\">"+"<button class=\"btn btn-danger\" onclick=\"removeoutputpin("+po.pin_no+")\">"+"Remove "+p.name+"</button>"+"</div>";}
+					resp+="</div>";}
 		}
-		resp+="</div>";
 		response.getWriter().append(resp);
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
