@@ -298,7 +298,7 @@ function inputpinlog(pin){
 	    {if(result=="error")
 	    	return;
 		//$("#graph").html(result)
-		//console.log(eval(result))
+		console.log(result)
 		var chart = new CanvasJS.Chart("graphdiv", {
 			animationEnabled: true,
 			title:{

@@ -38,17 +38,16 @@ public class SensorGauges extends HttpServlet {
 			return;
 		ServerData sd=new MySqlData(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		int uid=(int) s.getAttribute("user_uid");
-		String data="";
+		StringBuilder data=new StringBuilder();
 		for(PinInput po:sd.getPinsInput(uid)) {
 			System.out.println(po.name);
 			//data+="<div class=\"row\">";
-			data+=po.name+" Pin "+po.pin_no+"<br />";
-			data+=po.getGauge();
-			data+="<br />";
-			data+="<button class=\"btn btn-danger\" onclick=removeinputpin("+po.pin_no+")>Remove "+po.name+"</button>";
-			data+="<br />";
+			data.append(po.name+" Pin "+po.pin_no+"<br />");
+			data.append(po.getGauge());
+			data.append("<br />");
+			data.append("<button class=\"btn btn-danger\" onclick=removeinputpin("+po.pin_no+")>Remove "+po.name+"</button>");
+			data.append("<br />");
 		}
-		data+="";
 		//System.out.println(data);
 		response.getWriter().append(data);
 	}

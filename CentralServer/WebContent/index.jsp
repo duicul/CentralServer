@@ -35,7 +35,7 @@ background-color:rgb(100,120,180);
 </div>
 </div>
 <div class="col-8 bg-info">
-
+<hr/>
 <div class="row">
 <div class="col" id="boxaddpins"></div>
 </div>

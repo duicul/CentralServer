@@ -45,9 +45,9 @@ public class InputPinTopLogSensors extends HttpServlet {
 		{int uid=sd.getUser(s.getAttribute("user").toString()).uid;
 		List<PinInput> lpi=sd.getTopPinInputLogSensors(uid, sensors);
 		if(lpi!=null)
-		{String data="";
+		{StringBuilder data=new StringBuilder();
 			for(PinInput pi:lpi)
-				data+=pi.name+" "+pi.sensor+" "+pi.timestamp+"<br/>";
+				data.append(pi.name+" "+pi.sensor+" "+pi.timestamp+"<br/>");
 			response.getWriter().append(data);		
 		}}
 		else  response.getWriter().append("error");

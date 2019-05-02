@@ -28,14 +28,13 @@ public class InputPinsList extends HttpServlet {
    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ServerData sd=new MySqlData(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		HttpSession s=request.getSession();
-		String resp="<div>";
+		StringBuilder resp=new StringBuilder();
 		if(s!=null&&s.getAttribute("user")!=null){
 			int uid=(int) s.getAttribute("user_uid");
 			System.out.println(uid+" "+sd.getPinsInput(uid).size()+" input pins");
 			for(PinInput pi:sd.getPinsInput(uid)){
 				System.out.println("Sensor type |"+pi.sensor+"|");
-				resp+=pi.getData();}}
-		 resp+="</div>";
+				resp.append(pi.getData());}}
 		 //System.out.println(resp);
 		 response.getWriter().append(resp);
 	}
