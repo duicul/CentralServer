@@ -9,9 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import data.DatabaseSetup;
-import data.MySqlData;
-import data.ServerData;
 import data.User;
+import data.UserData;
+import data.UserMySQL;
 
 /**
  * Servlet implementation class UserForm
@@ -25,7 +25,6 @@ public class UserForm extends HttpServlet {
      */
     public UserForm() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -33,18 +32,12 @@ public class UserForm extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setHeader("Content-type", "text/plain");
-		ServerData sd=new MySqlData(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
+		UserData sduser=new UserMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		HttpSession s=request.getSession();
 		if(s!=null&&s.getAttribute("user")!=null){
-			User u=sd.getUser((String)s.getAttribute("user"));
+			User u=sduser.getUser((String)s.getAttribute("user"));
 			if(u==null)
 				return;
-			int uid=u.uid;
-			String phone,name,email,address,info;
-			phone=u.phone;
-			name=u.name;
-			email=u.email;
-			address=u.adress;
 			StringBuilder data=new StringBuilder();
 			data.append("<hr />");
 			data.append("<form class=\"form-inline\" id=\"updatepasswordform\">");
@@ -75,7 +68,6 @@ public class UserForm extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

@@ -8,9 +8,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import data.DatabaseSetup;
-import data.MySqlData;
+import data.InputPinData;
+import data.InputPinMySQL;
 import data.PinInput;
-import data.ServerData;
 
 /**
  * Servlet implementation class InputPinsList
@@ -26,13 +26,13 @@ public class InputPinsList extends HttpServlet {
         super(); }
 
    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ServerData sd=new MySqlData(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
+		InputPinData sdin=new InputPinMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		HttpSession s=request.getSession();
 		StringBuilder resp=new StringBuilder();
 		if(s!=null&&s.getAttribute("user")!=null){
 			int uid=(int) s.getAttribute("user_uid");
-			System.out.println(uid+" "+sd.getPinsInput(uid).size()+" input pins");
-			for(PinInput pi:sd.getPinsInput(uid)){
+			//System.out.println(uid+" "+sdin.getPinsInput(uid).size()+" input pins");
+			for(PinInput pi:sdin.getPinsInput(uid)){
 				System.out.println("Sensor type |"+pi.sensor+"|");
 				resp.append(pi.getData());}}
 		 //System.out.println(resp);

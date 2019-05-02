@@ -9,9 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import data.DatabaseSetup;
-import data.MySqlData;
-import data.ServerData;
 import data.User;
+import data.UserData;
+import data.UserMySQL;
 
 /**
  * Servlet implementation class UpdateUser
@@ -40,11 +40,11 @@ public class UpdateUser extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ServerData sd=new MySqlData(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
+		UserData sduser=new UserMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		System.out.println("SignUp");
 		HttpSession s=request.getSession();
 		if(s!=null&&s.getAttribute("user")!=null){
-			User u=sd.getUser((String)s.getAttribute("user"));
+			User u=sduser.getUser((String)s.getAttribute("user"));
 			if(u==null)
 				{response.getWriter().append("error");return;}
 			String user=u.name;
@@ -53,7 +53,7 @@ public class UpdateUser extends HttpServlet {
 			String phone=request.getParameter("phone");
 			String info=request.getParameter("info");
 			response.setHeader("Content-type", "text/plain");   
-		    if(sd.updateUser(user,email, address, phone, info)) {
+		    if(sduser.updateUser(user,email, address, phone, info)) {
 		    	response.getWriter().append("okay");
 		    	return;}
 		}

@@ -7,9 +7,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import data.DatabaseSetup;
-import data.MySqlData;
-import data.ServerData;
 import data.User;
+import data.UserData;
+import data.UserMySQL;
 
 /**
  * Servlet implementation class Login
@@ -26,7 +26,7 @@ public class Login extends HttpServlet {
 		response.getWriter().append("<div></div>");
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ServerData sd=new MySqlData(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
+		UserData sd=new UserMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		System.out.println("Login");
 		String user=request.getParameter("user");
 		String pass=request.getParameter("password");

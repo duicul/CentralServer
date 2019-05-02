@@ -9,9 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import data.DatabaseSetup;
-import data.MySqlData;
-import data.ServerData;
-import data.User;
+import data.UserData;
+import data.UserMySQL;
 
 /**
  * Servlet implementation class ChangePassword
@@ -40,7 +39,7 @@ public class ChangePassword extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ServerData sd=new MySqlData(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
+		UserData sd=new UserMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		HttpSession s=request.getSession();
 		if(s!=null&&s.getAttribute("user")!=null){
 			String user=(String) s.getAttribute("user");

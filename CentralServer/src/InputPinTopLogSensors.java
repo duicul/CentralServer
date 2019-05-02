@@ -12,9 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import data.DatabaseSetup;
-import data.MySqlData;
+import data.InputPinData;
+import data.InputPinMySQL;
 import data.PinInput;
-import data.ServerData;
+import data.UserData;
+import data.UserMySQL;
 
 /**
  * Servlet implementation class InputPinTopLogSensors
@@ -35,7 +37,8 @@ public class InputPinTopLogSensors extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ServerData sd=new MySqlData(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
+		InputPinData sdin=new InputPinMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
+		UserData sd=new UserMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		HttpSession s=request.getSession();
 		response.setHeader("Content-type", "text/plain");
 		List<String> sensors=new ArrayList<String>();
@@ -43,7 +46,7 @@ public class InputPinTopLogSensors extends HttpServlet {
 		//sensors.add("DHT");
 		if(s!=null&&s.getAttribute("user")!=null)
 		{int uid=sd.getUser(s.getAttribute("user").toString()).uid;
-		List<PinInput> lpi=sd.getTopPinInputLogSensors(uid, sensors);
+		List<PinInput> lpi=sdin.getTopPinInputLogSensors(uid, sensors);
 		if(lpi!=null)
 		{StringBuilder data=new StringBuilder();
 			for(PinInput pi:lpi)

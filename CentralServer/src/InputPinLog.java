@@ -9,9 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import data.DatabaseSetup;
-import data.MySqlData;
+import data.InputPinData;
+import data.InputPinMySQL;
 import data.PinInput;
-import data.ServerData;
+import data.UserData;
+import data.UserMySQL;
 
 /**
  * Servlet implementation class InputPinLog
@@ -34,12 +36,13 @@ public class InputPinLog extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int pin_no=Integer.parseInt(request.getParameter("pin").toString());
 		System.out.println("Pin number "+pin_no);
-		ServerData sd=new MySqlData(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
+		InputPinData sdin=new InputPinMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
+		UserData sd=new UserMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		HttpSession s=request.getSession();
 		response.setHeader("Content-type", "text/plain");
 		if(s!=null&&s.getAttribute("user")!=null)
 		{int uid=sd.getUser(s.getAttribute("user").toString()).uid;
-		PinInput pi=sd.getIntputPinbyPin_no(pin_no,uid);
+		PinInput pi=sdin.getIntputPinbyPin_no(pin_no,uid);
 		if(pi!=null)
 		response.getWriter().append(pi.drawGraph(uid));		
 		}

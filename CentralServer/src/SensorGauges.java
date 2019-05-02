@@ -9,10 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import data.DatabaseSetup;
-import data.MySqlData;
+import data.InputPinData;
+import data.InputPinMySQL;
 import data.PinInput;
-import data.PinOutput;
-import data.ServerData;
 
 /**
  * Servlet implementation class SensorGauges
@@ -36,7 +35,7 @@ public class SensorGauges extends HttpServlet {
 		response.setHeader("Content-type", "text/plain");
 		if(s==null||s.getAttribute("user")==null)
 			return;
-		ServerData sd=new MySqlData(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
+		InputPinData sd=new InputPinMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		int uid=(int) s.getAttribute("user_uid");
 		StringBuilder data=new StringBuilder();
 		for(PinInput po:sd.getPinsInput(uid)) {

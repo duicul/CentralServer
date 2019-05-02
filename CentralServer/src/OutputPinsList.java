@@ -7,10 +7,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import data.DatabaseSetup;
-import data.MySqlData;
+import data.OutputPinData;
+import data.OutputPinMySQL;
 import data.Pin;
+import data.PinData;
+import data.PinMySQL;
 import data.PinOutput;
-import data.ServerData;
+import data.UserData;
+import data.UserMySQL;
 
 @WebServlet("/OutputPinsList")
 public class OutputPinsList extends HttpServlet {
@@ -20,15 +24,17 @@ public class OutputPinsList extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ServerData sd=new MySqlData(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
+		OutputPinData sdout=new OutputPinMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
+		PinData sdpin=new PinMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
+		UserData sd=new UserMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		HttpSession s=request.getSession();
 		StringBuilder resp=new StringBuilder();
 		response.setHeader("Content-type", "text/plain");
 		if(s!=null&&s.getAttribute("user")!=null)
-		{int uid=(int) s.getAttribute("user_uid");
+		{int uid=sd.getUser(s.getAttribute("user").toString()).uid;
 		//"<!DOCTYPE html><html>";
-			for(PinOutput po:sd.getPinsOutput(uid))
-				{Pin p=sd.getPin(po.pin_no,uid);
+			for(PinOutput po:sdout.getPinsOutput(uid))
+				{Pin p=sdpin.getPin(po.pin_no,uid);
 				if(p!=null){
 					resp.append("<div class=\"row\">");
 					resp.append("<div class=\"col\">"+po.pin_no+" "+p.name+"</div>");

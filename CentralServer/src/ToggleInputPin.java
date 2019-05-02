@@ -9,9 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import data.DatabaseSetup;
-import data.MySqlData;
+import data.InputPinData;
+import data.InputPinMySQL;
 import data.PIR;
-import data.ServerData;
 
 /**
  * Servlet implementation class ToggleInputPin
@@ -37,7 +37,7 @@ public class ToggleInputPin extends HttpServlet {
 		HttpSession s=request.getSession();
 		if(s!=null&&s.getAttribute("user")!=null){
 			int uid=(int) s.getAttribute("user_uid");
-			ServerData sd=new MySqlData(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
+			InputPinData sd=new InputPinMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 			int pin_no=-1;
 			pin_no=Integer.parseInt(request.getParameter("pin_no"));
 			//System.out.println(pin_no);
