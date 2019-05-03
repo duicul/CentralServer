@@ -39,7 +39,7 @@ public class AddOutputPin extends HttpServlet {
 		response.setHeader("Content-type", "text/plain");
 		if(s!=null&&s.getAttribute("user")!=null)
 		{int uid=sd.getUser(s.getAttribute("user").toString()).uid;
-		sdout.insertOutputPin(Integer.parseInt(request.getParameter("pin").toString()), 0, request.getParameter("name").toString(), uid);
+		sdout.insertOutputPin(Integer.parseInt(request.getParameter("pin").toString()),false, request.getParameter("name").toString(), uid);
 		response.getWriter().append("okay");
 		return;}
 		response.getWriter().append("error");

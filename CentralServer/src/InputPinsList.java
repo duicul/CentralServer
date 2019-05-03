@@ -29,12 +29,13 @@ public class InputPinsList extends HttpServlet {
 		InputPinData sdin=new InputPinMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		HttpSession s=request.getSession();
 		StringBuilder resp=new StringBuilder();
+		response.setHeader("Content-type", "text/plain");
 		if(s!=null&&s.getAttribute("user")!=null){
 			int uid=(int) s.getAttribute("user_uid");
 			//System.out.println(uid+" "+sdin.getPinsInput(uid).size()+" input pins");
 			for(PinInput pi:sdin.getPinsInput(uid)){
 				System.out.println("Sensor type |"+pi.sensor+"|");
-				resp.append(pi.getData());}}
+				resp.append(pi.getHelper(uid).getData());}}
 		 //System.out.println(resp);
 		 response.getWriter().append(resp);
 	}

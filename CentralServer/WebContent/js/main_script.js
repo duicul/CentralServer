@@ -220,7 +220,7 @@ function toggleinputpin(pin_no){
 	  $.ajax({url:"/CentralServer/ToggleInputPin?pin_no="+pin_no,success : function(result)
 		     {sensorgauges();}});}
 
-function loadinputpinslist(pin_no){
+function loadinputpinslist(){
 	if(loggedin==true){
 	$.ajax({url:"/CentralServer/InputPinsList",success : function(result)
 	     {$("#inputpinslist").html(result);}});}
@@ -298,7 +298,7 @@ function inputpinlog(pin){
 	    {if(result=="error")
 	    	return;
 		//$("#graph").html(result)
-		console.log(result)
+		//console.log(result)
 		var chart = new CanvasJS.Chart("graphdiv", {
 			animationEnabled: true,
 			title:{
@@ -345,6 +345,7 @@ function inputpinlogsensors(){
 function sensorgauges(repeat){
 	if(loggedin==true){
 		loadinputpinslist();
+		loadoutputpinslist();
 		refresh="<div class=\"row\"><div class=\"col\">"
 		refresh+="<i class=\"fas fa-sync pointer fa-2x\" onclick=\"sensorgauges()\">Refresh</i>"
 			
@@ -403,6 +404,161 @@ function boxaddpins_signup(){
 	}
 	$("#boxaddpins").html(data_pins);
 }
+
+function loadconditionlist(pin,sensor){
+	console.log("loadconditionlist "+pin+" "+sensor)
+	$.ajax({url:"/CentralServer/ConditionList?pin="+pin+"&sensor="+sensor,success : function(result)
+	    {$("#conditionlist").html(result)
+	    }
+	});
+}
+
+function showconditionform(pin,sensor){
+	data="<div class=\"row\">"
+	data+="<div class=\"col\">"
+	data+="Temperature <select id=\"temp_cond_op\" onchange=\"displaycondition_none()\">";
+	data+="<option value=\"\">none</option>"
+	data+="<option value=\"<\"><</option>"
+	data+="<option value=\">\">></option>"
+	data+="</select>"
+	data+="<input type=\"text\" placeholder=\"Temperature value\" id=\"temp_cond_val\"/>";
+	data+="</div>"
+	
+	data+="<div class=\"col\">"
+	data+="Humidity <select id=\"hum_cond_op\" onchange=\"displaycondition_none()\">";
+	data+="<option value=\"\">none</option>"
+	data+="<option value=\"<\"><</option>"
+	data+="<option value=\">\">></option>"
+	data+="</select>"
+	data+="<input type=\"text\" placeholder=\"Humidity value\" id=\"hum_cond_val\"/>";
+	data+="</div>"
+		
+	data+="<div class=\"col\">PinNo <br/>"
+	data+="<select id=\"cond_pin_out_no\">";
+	for(var i=2;i<=26;i++)
+	data+="<option value=\""+i+"\">"+i+"</option>"
+	data+="</select>"
+	data+="</div>"
+		
+	data+="<div class=\"col\">Value <br/>"
+	data+="<select id=\"cond_pin_out_val\">";
+	data+="<option value=\"0\">0</option>"
+	data+="<option value=\"1\">1</option>"
+	data+="</select>"
+	data+="</div>"	
+		
+	data+="<div class=\"col\">"
+	data+="<input type=\"button\" class=\"btn btn-success\" onclick=\"addcondition("+pin+",'"+sensor+"')\" value=\"AddCondition\"></button>"	
+	data+="</div>"
+			
+	data+="</div>"
+	$("#conditionform").html(data)
+} 
+
+function showcondition(pin,sensor){
+	if(loggedin==false||pin==undefined)
+		return;
+	console.log("showcondition "+pin+" "+sensor)
+	$("#graphdiv").css("width","")
+	$("#graphdiv").css("height","")
+	$("#graphdiv").html("")
+	$("#graphdiv").html("<div class=\"row\"><div class=\"col\" id=\"conditionlist\"></div></div><div class=\"row\">"/*+"<div class=\"col\" id=\"conditionform\"></div>"*/+"</div>")
+	loadconditionlist(pin,sensor)
+	//showconditionform(pin,sensor)
+}
+
+function displaycondition_none(){
+	if($("#hum_cond_op").val()=="")
+		$("#hum_cond_val").css("visibility","hidden")
+	else $("#hum_cond_val").css("visibility","visible")
+
+	if($("#temp_cond_op").val()=="")
+		$("#temp_cond_val").css("visibility","hidden")
+	else $("#temp_cond_val").css("visibility","visible")
+}
+
+function addcondition(pin,sensor){
+	
+	cond=""
+	if(pin==undefined)
+		return;
+	console.log("addcondition"+pin+" "+sensor)
+	
+	if(sensor=="DHT11"||sensor=="DHT22"){
+		op_hum=$("#hum_cond_op").val()
+		op_temp=$("#temp_cond_op").val()
+		val_hum=$("#hum_cond_val").val()
+		val_temp=$("#temp_cond_val").val()
+		
+		if($("#hum_cond_op").val()==""&&$("#temp_cond_op").val()==""){
+			alert("No condition added")
+			return;}
+	
+		if(isNaN(val_hum)||isNaN(val_temp)){
+			alert("Values have to be numbers")
+			return;}
+	
+		if(($("#hum_cond_op").val()!=""&&val_hum.length==0)||($("#temp_cond_op").val()!=""&&val_temp.length==0)){
+			alert("Enter values")
+			return;}	
+	
+		if($("#hum_cond_op").val()==""){
+			val_hum=""}
+	
+		if($("#temp_cond_op").val()==""){
+			val_temp=""}
+	
+		cond=op_hum+""+val_hum+" "+op_temp+""+val_temp}
+	
+	else if(sensor=="PIR"){
+		time_cond=$("#pir_cond_val").val()
+		if(time_cond==""){
+			alert("No condition added")
+			return;}
+		if(isNaN(time_cond)){
+			alert("Values have to be numbers")
+			return;}
+		cond=time_cond
+		}
+	else {
+		alert("Sensor not known")
+		return;}
+	
+	console.log(cond)
+	
+	var retVal = confirm("Add condition ?");
+    if( retVal == false ) {
+       return;}
+    
+    url="/CentralServer/AddCondition"
+    
+    $.post(url,
+			  {"pin_in": pin,
+			   "pin_out":$("#cond_pin_out_no").val(),
+			   "val": $("#cond_pin_out_val").val(),
+			   "cond":cond,},
+			  function(data, status){
+				   if(data=="okay"){loadconditionlist(pin,sensor);}
+				   
+				   else {alert($("#cond_pin_out_no").val()+" is not an output pin")}
+				 
+			  });
+	
+}
+
+function removecondition(cid,pin,sensor){
+	 var retVal = confirm("Remove condition ? ");
+     if( retVal == false ) {
+        return;}
+	$.ajax({url:"/CentralServer/RemoveCondition?cid="+cid,success : function(result)
+	    {if(result=="error")
+	    	return;
+	   loadconditionlist(pin,sensor)
+	    }
+	});
+	
+}
+
 function init(){
 	loggedin=false;
 	logstatus();
