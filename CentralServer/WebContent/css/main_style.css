@@ -2,5 +2,6 @@
 .pointer:hover {
     cursor: pointer;
 }
+.center{text-align:center;}
 .row{width:100%;}
 .col{width:100%;}

@@ -8,48 +8,53 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import data.ConditionData;
-import data.ConditionMySQL;
 import data.DatabaseSetup;
 import data.Pin;
+import data.PinData;
 import data.PinMySQL;
 import data.User;
 import data.UserData;
 import data.UserMySQL;
 
 /**
- * Servlet implementation class RemoveCondition
+ * Servlet implementation class ConditionForm
  */
-@WebServlet("/RemoveCondition")
-public class RemoveCondition extends HttpServlet {
+@WebServlet("/ConditionForm")
+public class ConditionForm extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public RemoveCondition() {
+    public ConditionForm() {
         super();
         // TODO Auto-generated constructor stub
     }
 
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int pin_no=Integer.parseInt(request.getParameter("pin").toString());
+		PinData sdpin=new PinMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		UserData sd=new UserMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
-		ConditionData sdcon=new ConditionMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		HttpSession s=request.getSession();
-		int cid=Integer.parseInt(request.getParameter("cid").toString());
-		int pin=Integer.parseInt(request.getParameter("pin").toString());
 		response.setHeader("Content-type", "text/plain");
+		StringBuilder sb=new StringBuilder();
 		if(s!=null&&s.getAttribute("user")!=null){
 			User u=sd.getUser(s.getAttribute("user").toString());
-			if(u!=null) {
-				Pin p=new PinMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass).getPin(pin, u.uid);
-				if(p!=null)
-					switch(p.type) {
-					case "IN":sdcon.removeConditionIn(cid);response.getWriter().append("okay");return;
-					case "OUT":sdcon.removeConditionOut(cid);response.getWriter().append("okay");return;
-					}
+			if(u==null) {
+				return;}
+			Pin p=sdpin.getPin(pin_no, u.uid);
+			
+			if(p!=null) {
+				//System.out.println("Condition Form "+p);
+				sb.append(p.getHelper(u.uid).getConditionForm());
 			}
+			
+			//System.out.println("ConditionForm "+p);
+			response.getWriter().append(sb.toString());
 		}
-		response.getWriter().append("error");
 	}
+
 }

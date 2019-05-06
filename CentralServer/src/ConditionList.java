@@ -10,10 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import data.DatabaseSetup;
-import data.HTMLHelper;
-import data.InputPinData;
-import data.InputPinMySQL;
-import data.PinInput;
+import data.Pin;
+import data.PinData;
+import data.PinMySQL;
 import data.User;
 import data.UserData;
 import data.UserMySQL;
@@ -33,7 +32,7 @@ public class ConditionList extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int pin_no=Integer.parseInt(request.getParameter("pin").toString());
-		InputPinData sdin=new InputPinMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
+		PinData sdpin=new PinMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		UserData sd=new UserMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		HttpSession s=request.getSession();
 		response.setHeader("Content-type", "text/plain");
@@ -42,11 +41,12 @@ public class ConditionList extends HttpServlet {
 			User u=sd.getUser(s.getAttribute("user").toString());
 			if(u==null) {
 				return;}
-			PinInput pi=sdin.getIntputPinbyPin_no(pin_no, u.uid);
-			HTMLHelper hh=pi.getHelper(u.uid);
-			sb.append(hh.getConditionList());
-			sb.append("<hr>");
-			sb.append(hh.getConditionForm());			
+			Pin p=sdpin.getPin(pin_no, u.uid);
+			if(p!=null) {
+				//System.out.println("Condition List "+p);
+				sb.append(p.getHelper(u.uid).getConditionList());
+			}
+			//System.out.println("ConditionList "+p);
 			response.getWriter().append(sb.toString());
 		}
 	}

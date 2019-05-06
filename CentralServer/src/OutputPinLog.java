@@ -11,20 +11,21 @@ import javax.servlet.http.HttpSession;
 import data.DatabaseSetup;
 import data.OutputPinData;
 import data.OutputPinMySQL;
+import data.PinOutput;
 import data.UserData;
 import data.UserMySQL;
 
 /**
- * Servlet implementation class AddOutputPin
+ * Servlet implementation class OutputPinLog
  */
-@WebServlet("/AddOutputPin")
-public class AddOutputPin extends HttpServlet {
+@WebServlet("/OutputPinLog")
+public class OutputPinLog extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddOutputPin() {
+    public OutputPinLog() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -33,24 +34,24 @@ public class AddOutputPin extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		UserData sd=new UserMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
+		int pin_no=Integer.parseInt(request.getParameter("pin").toString());
+		System.out.println("Pin number "+pin_no);
 		OutputPinData sdout=new OutputPinMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
+		UserData sd=new UserMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		HttpSession s=request.getSession();
 		response.setHeader("Content-type", "text/plain");
 		if(s!=null&&s.getAttribute("user")!=null)
 		{int uid=sd.getUser(s.getAttribute("user").toString()).uid;
-		System.out.println("Add output pin "+request.getParameter("pin"));
-		sdout.insertOutputPin(Integer.parseInt(request.getParameter("pin").toString()),false, request.getParameter("name").toString(), uid);
-		response.getWriter().append("okay");
-		return;}
-		response.getWriter().append("error");
+		PinOutput po=sdout.getOutputPinbyPin_no(pin_no,uid);
+		if(po!=null) {
+		response.getWriter().append(po.getHelper(uid).drawGraph());		
+		}
+		}
+		else  response.getWriter().append("error");
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

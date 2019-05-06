@@ -204,16 +204,31 @@ function updateuser(){
 	
 }
 
+function getoutputgauge(pin){
+	if(loggedin==true){
+		  $.ajax({url:"/CentralServer/GetOutputGauge?pin="+pin,success : function(result)
+		     {//console.log(result);
+		     $("#out_pin_"+pin).html(result);}});}
+	else $("#out_pin_"+pin).html("");
+	
+}
+
 function loadoutputpinslist(){
 	if(loggedin==true){
-  $.ajax({url:"/CentralServer/OutputPinsList",success : function(result)
-     {$("#outputpinslist").html("<hr/>"+result);}});}
+		//console.log("loadoutputpinslist")
+  $.ajax({url:"/CentralServer/OutputGauges",success : function(result)
+     {$("#outputpinslist").html(result);}});}
    else $("#outputpinslist").html("");}
 
 function togglepin(pin_no){
 	if(loggedin==true)
 	  $.ajax({url:"/CentralServer/ToggleOutputPin?pin_no="+pin_no,success : function(result)
-		     {loadoutputpinslist();}});}
+		     {//loadoutputpinslist();
+		     getoutputgauge(pin_no);
+		     }
+	  }
+	  );
+	}
 
 function toggleinputpin(pin_no){
 	if(loggedin==true)
@@ -299,6 +314,31 @@ function inputpinlog(pin){
 	    	return;
 		//$("#graph").html(result)
 		//console.log(result)
+		var chart = new CanvasJS.Chart("graphdiv", {
+			animationEnabled: true,
+			title:{
+				text: "SensorData"
+			},
+			axisY:{
+				includeZero: true
+			},
+			data:eval(result)//JSON.stringify(eval('('+result+')'))
+		});
+		chart.render();
+		}
+	    });
+}
+
+function outputpinlog(pin){
+	if(loggedin==false)
+		return;
+	$("#graphdiv").css("width","100%")
+	$("#graphdiv").css("height","300px")
+	$.ajax({url:"/CentralServer/OutputPinLog?pin="+pin,success : function(result)
+	    {if(result=="error")
+	    	return;
+		//$("#graph").html(result)
+		console.log(eval(result))
 		var chart = new CanvasJS.Chart("graphdiv", {
 			animationEnabled: true,
 			title:{
@@ -405,15 +445,25 @@ function boxaddpins_signup(){
 	$("#boxaddpins").html(data_pins);
 }
 
-function loadconditionlist(pin,sensor){
-	console.log("loadconditionlist "+pin+" "+sensor)
-	$.ajax({url:"/CentralServer/ConditionList?pin="+pin+"&sensor="+sensor,success : function(result)
-	    {$("#conditionlist").html(result)
+function loadconditionlist(pin){
+	console.log("loadconditionlist "+pin)
+	$.ajax({url:"/CentralServer/ConditionList?pin="+pin,success : function(result)
+	    {//console.log(result);
+	    $("#conditionlist").html(result)
 	    }
 	});
 }
 
-function showconditionform(pin,sensor){
+function loadconditionform(pin){
+	$.ajax({url:"/CentralServer/ConditionForm?pin="+pin,success : function(result)
+	    {//console.log(result);
+	    $("#conditionform").html(result)
+	    }
+	});
+}
+
+
+/*function showconditionform(pin,sensor){
 	data="<div class=\"row\">"
 	data+="<div class=\"col\">"
 	data+="Temperature <select id=\"temp_cond_op\" onchange=\"displaycondition_none()\">";
@@ -453,18 +503,17 @@ function showconditionform(pin,sensor){
 			
 	data+="</div>"
 	$("#conditionform").html(data)
-} 
+} */
 
-function showcondition(pin,sensor){
+function showcondition(pin){
 	if(loggedin==false||pin==undefined)
 		return;
-	console.log("showcondition "+pin+" "+sensor)
 	$("#graphdiv").css("width","")
 	$("#graphdiv").css("height","")
 	$("#graphdiv").html("")
-	$("#graphdiv").html("<div class=\"row\"><div class=\"col\" id=\"conditionlist\"></div></div><div class=\"row\">"/*+"<div class=\"col\" id=\"conditionform\"></div>"*/+"</div>")
-	loadconditionlist(pin,sensor)
-	//showconditionform(pin,sensor)
+	$("#graphdiv").html("<div class=\"row\"><div class=\"col\" id=\"conditionlist\"></div></div><hr/><div class=\"row\"><div class=\"col\" id=\"conditionform\"></div></div>")
+	loadconditionlist(pin)
+	loadconditionform(pin)
 }
 
 function displaycondition_none(){
@@ -508,7 +557,7 @@ function addcondition(pin,sensor){
 		if($("#temp_cond_op").val()==""){
 			val_temp=""}
 	
-		cond=op_hum+""+val_hum+" "+op_temp+""+val_temp}
+		cond=op_temp+""+val_temp+" "+op_hum+""+val_hum}
 	
 	else if(sensor=="PIR"){
 		time_cond=$("#pir_cond_val").val()
@@ -546,14 +595,35 @@ function addcondition(pin,sensor){
 	
 }
 
-function removecondition(cid,pin,sensor){
+function addconditionout(pin){
+	time_start=$("#time_start_val").val()
+	time_end=$("#time_end_val").val()
+	val=$("#cond_pin_out_val").val()
+	if(time_end<time_start){
+		alert("Time start should be before time end")
+		return;}
+	url="/CentralServer/AddConditionOut"
+	 $.post(url,
+			  {"pin": pin,
+			   "time_start":time_start,
+			   "time_end": time_end,
+			   "val":val,},
+			  function(data, status){
+				   if(data=="okay"){loadconditionlist(pin);}
+				   
+				   else {alert($("#cond_pin_out_no").val()+" is not an output pin")}
+				 
+			  });
+}
+
+function removecondition(cid,pin){
 	 var retVal = confirm("Remove condition ? ");
      if( retVal == false ) {
         return;}
-	$.ajax({url:"/CentralServer/RemoveCondition?cid="+cid,success : function(result)
+	$.ajax({url:"/CentralServer/RemoveCondition?cid="+cid+"&pin="+pin,success : function(result)
 	    {if(result=="error")
 	    	return;
-	   loadconditionlist(pin,sensor)
+	   loadconditionlist(pin)
 	    }
 	});
 	

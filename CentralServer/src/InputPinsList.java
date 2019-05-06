@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import data.DatabaseSetup;
 import data.InputPinData;
 import data.InputPinMySQL;
+import data.Pin;
 import data.PinInput;
 
 /**
@@ -33,8 +34,8 @@ public class InputPinsList extends HttpServlet {
 		if(s!=null&&s.getAttribute("user")!=null){
 			int uid=(int) s.getAttribute("user_uid");
 			//System.out.println(uid+" "+sdin.getPinsInput(uid).size()+" input pins");
-			for(PinInput pi:sdin.getPinsInput(uid)){
-				System.out.println("Sensor type |"+pi.sensor+"|");
+			for(Pin pi:sdin.getPinsInput(uid)){
+				//System.out.println("Sensor type |"+((PinInput)pi).sensor+"|");
 				resp.append(pi.getHelper(uid).getData());}}
 		 //System.out.println(resp);
 		 response.getWriter().append(resp);

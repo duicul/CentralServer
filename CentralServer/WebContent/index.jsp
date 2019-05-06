@@ -30,18 +30,14 @@ background-color:rgb(100,120,180);
 </nav>
 <div class="row"><div class="col"  style="height:1em ; background-color: #ffffff"></div></div>
 <div class="row">
-<div class="col-4">
+<div class="col-3">
 <div  id="sensorgauges">
 </div>
 </div>
-<div class="col-8 bg-info">
+<div class="col-6 bg-info">
 <hr/>
 <div class="row">
 <div class="col" id="boxaddpins"></div>
-</div>
-
-<div class="row">
-<div class="col" id="outputpinslist"></div>
 </div>
 <hr/>
 <div class="row">
@@ -54,6 +50,9 @@ background-color:rgb(100,120,180);
 
 <div id="test1"></div>
 </div>
+<div class="col-3" id="outputpinslist"></div>
+</div>
+
 </div>
 
 </body>

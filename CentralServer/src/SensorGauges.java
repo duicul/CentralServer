@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 import data.DatabaseSetup;
 import data.InputPinData;
 import data.InputPinMySQL;
-import data.PinInput;
+import data.Pin;
 
 /**
  * Servlet implementation class SensorGauges
@@ -38,15 +38,10 @@ public class SensorGauges extends HttpServlet {
 		InputPinData sd=new InputPinMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		int uid=(int) s.getAttribute("user_uid");
 		StringBuilder data=new StringBuilder();
-		for(PinInput po:sd.getPinsInput(uid)) {
+		for(Pin po:sd.getPinsInput(uid)) {
 			System.out.println(po.name);
 			//data+="<div class=\"row\">";
-			data.append(po.name+" Pin "+po.pin_no+"<br />");
-			data.append(po.getHelper(uid).getGauge());
-			data.append("<br />");
-			data.append("<button class=\"btn btn-danger\" onclick=removeinputpin("+po.pin_no+")>Remove "+po.name+"</button>");
-			data.append("<br />");
-		}
+			data.append(po.getHelper(uid).getGauge()+"<br/>");}
 		//System.out.println(data);
 		response.getWriter().append(data);
 	}

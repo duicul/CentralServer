@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 import data.DatabaseSetup;
 import data.InputPinData;
 import data.InputPinMySQL;
-import data.PinInput;
+import data.Pin;
 import data.UserData;
 import data.UserMySQL;
 
@@ -42,7 +42,7 @@ public class InputPinLog extends HttpServlet {
 		response.setHeader("Content-type", "text/plain");
 		if(s!=null&&s.getAttribute("user")!=null)
 		{int uid=sd.getUser(s.getAttribute("user").toString()).uid;
-		PinInput pi=sdin.getIntputPinbyPin_no(pin_no,uid);
+		Pin pi=sdin.getIntputPinbyPin_no(pin_no,uid);
 		if(pi!=null)
 		response.getWriter().append(pi.getHelper(uid).drawGraph());		
 		}

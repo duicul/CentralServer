@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import data.DatabaseSetup;
 import data.InputPinData;
 import data.InputPinMySQL;
+import data.Pin;
 import data.PinInput;
 import data.UserData;
 import data.UserMySQL;
@@ -46,11 +47,11 @@ public class InputPinTopLogSensors extends HttpServlet {
 		//sensors.add("DHT");
 		if(s!=null&&s.getAttribute("user")!=null)
 		{int uid=sd.getUser(s.getAttribute("user").toString()).uid;
-		List<PinInput> lpi=sdin.getTopPinInputLogSensors(uid, sensors);
+		List<Pin> lpi=sdin.getTopPinInputLogSensors(uid, sensors);
 		if(lpi!=null)
 		{StringBuilder data=new StringBuilder();
-			for(PinInput pi:lpi)
-				data.append(pi.name+" "+pi.sensor+" "+pi.timestamp+"<br/>");
+			for(Pin pi:lpi)
+				data.append(pi.name+" "+((PinInput)pi).sensor+" "+((PinInput)pi).timestamp+"<br/>");
 			response.getWriter().append(data);		
 		}}
 		else  response.getWriter().append("error");
