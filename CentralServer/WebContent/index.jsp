@@ -53,7 +53,5 @@ background-color:rgb(100,120,180);
 <div class="col-3" id="outputpinslist"></div>
 </div>
 
-</div>
-
 </body>
 </html>
