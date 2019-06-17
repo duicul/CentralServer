@@ -11,6 +11,9 @@ import javax.servlet.http.HttpSession;
 import data.DatabaseSetup;
 import data.OutputPinData;
 import data.OutputPinMySQL;
+import data.User;
+import data.UserData;
+import data.UserMySQL;
 
 /**
  * Servlet implementation class ToggleOutputPin
@@ -24,17 +27,19 @@ public class ToggleOutputPin extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//System.out.println("toggleoutputpin");
 		HttpSession s=request.getSession();
+		UserData usd=new UserMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		response.setHeader("Content-type", "text/plain");
-		if(s!=null&&s.getAttribute("user")!=null)
-		{int uid=(int) s.getAttribute("user_uid");
-		OutputPinData sd=new OutputPinMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
-		int pin_no=-1;
-		pin_no=Integer.parseInt(request.getParameter("pin_no"));
-		//System.out.println(pin_no);
-		sd.toggleOutputPin(pin_no,uid);
-		//response.getWriter().append("<div></div>");
+		if(s!=null&&s.getAttribute("user")!=null){
+			User u=usd.getUser(s.getAttribute("user").toString());
+			if(u==null)return;
+				int uid=u.uid;
+			OutputPinData sd=new OutputPinMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
+			int pin_no=-1;
+			try{
+				pin_no=Integer.parseInt(request.getParameter("pin_no"));
+			}catch(Exception e) {return;}
+			sd.toggleOutputPin(pin_no,uid);
 		}
 	}
 

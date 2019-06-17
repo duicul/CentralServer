@@ -23,21 +23,8 @@ public class ChangePassword extends HttpServlet {
      * @see HttpServlet#HttpServlet()
      */
     public ChangePassword() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+        super();}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		UserData sd=new UserMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		HttpSession s=request.getSession();
@@ -46,7 +33,7 @@ public class ChangePassword extends HttpServlet {
 			String password=request.getParameter("password");
 			String oldpassword=request.getParameter("oldpassword");
 			response.setHeader("Content-type", "text/plain");   
-		    if(sd.changePassword(user,oldpassword,password)) {
+		    if(user!=null&&password!=null&&oldpassword!=null&&sd.changePassword(user,oldpassword,password)) {
 		    	response.getWriter().append("okay");
 		    	return;}
 		}

@@ -12,6 +12,9 @@ import data.DatabaseSetup;
 import data.InputPinData;
 import data.InputPinMySQL;
 import data.Pin;
+import data.User;
+import data.UserData;
+import data.UserMySQL;
 
 /**
  * Servlet implementation class SensorGauges
@@ -27,31 +30,20 @@ public class SensorGauges extends HttpServlet {
         super();
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession s=request.getSession();
 		response.setHeader("Content-type", "text/plain");
 		if(s==null||s.getAttribute("user")==null)
 			return;
 		InputPinData sd=new InputPinMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
-		int uid=(int) s.getAttribute("user_uid");
+		UserData usd=new UserMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
+		User u=usd.getUser(s.getAttribute("user").toString());
+		if(u==null)return;
+		int uid=u.uid;
 		StringBuilder data=new StringBuilder();
 		for(Pin po:sd.getPinsInput(uid)) {
-			System.out.println(po.name);
-			//data+="<div class=\"row\">";
 			data.append(po.getHelper(uid).getGauge()+"<br/>");}
-		//System.out.println(data);
 		response.getWriter().append(data);
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
 	}
 
 }

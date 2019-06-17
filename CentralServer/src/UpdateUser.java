@@ -28,17 +28,6 @@ public class UpdateUser extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		UserData sduser=new UserMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		System.out.println("SignUp");
@@ -53,7 +42,7 @@ public class UpdateUser extends HttpServlet {
 			String phone=request.getParameter("phone");
 			String info=request.getParameter("info");
 			response.setHeader("Content-type", "text/plain");   
-		    if(sduser.updateUser(user,email, address, phone, info)) {
+		    if(email!=null&&address!=null&&phone!=null&&info!=null&&sduser.updateUser(user,email, address, phone, info)) {
 		    	response.getWriter().append("okay");
 		    	return;}
 		}

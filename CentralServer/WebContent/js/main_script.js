@@ -44,7 +44,6 @@ function removeinputpin(pin_no){
 	 var retVal = confirm("Remove input pin "+pin_no);
      if( retVal == false ) {
         return;}
-	//console.log("removeinputpin"+pin_no)
 	$.ajax({url:"/CentralServer/RemoveInputPin?pin="+pin_no,success : function(result)
 	    {if(result=="error")
 	    	return;
@@ -142,6 +141,7 @@ function changepassword(){
 	var url = "/CentralServer/ChangePassword";
 	var password=$("#pass_txt_update").val();
 	var oldpassword=$("#oldpass_txt_update").val();
+	var confpassword=$("#pass_txt_update_confirm").val();
 	$("#pass_txt_update").css("border-color","")
 	$("#pass_txt_update").css("border-width","")
 	$("#pass_txt_update_confirm").css("border-color","")
@@ -154,7 +154,7 @@ function changepassword(){
 		$("#pass_txt_update").css("border-width","thick")
 		return;}
 	
-	if(password!=oldpassword){
+	if(password!=confpassword){
 		$("#change_password_msg").css("color","red")
 		$("#change_password_msg").html("ConfirmPassword does not match")
 		$("#pass_txt_update").css("border-color","red")
@@ -215,7 +215,6 @@ function getoutputgauge(pin){
 
 function loadoutputpinslist(){
 	if(loggedin==true){
-		//console.log("loadoutputpinslist")
   $.ajax({url:"/CentralServer/OutputGauges",success : function(result)
      {$("#outputpinslist").html(result);}});}
    else $("#outputpinslist").html("");}
@@ -295,8 +294,6 @@ function logout(){
 	    if(result=="okay"){
 	    	loggedin=false;
 	    	init()
-	    	//console.log("loggedout");
-	    	//location.reload()
 	    	$("#graphdiv").css("width","")
 	    	$("#graphdiv").css("height","")
 	    	$("#graphdiv").html("")
@@ -312,17 +309,11 @@ function inputpinlog(pin){
 	$.ajax({url:"/CentralServer/InputPinLog?pin="+pin,success : function(result)
 	    {if(result=="error")
 	    	return;
-		//$("#graph").html(result)
-		//console.log(result)
 		var chart = new CanvasJS.Chart("graphdiv", {
 			animationEnabled: true,
-			title:{
-				text: "SensorData"
-			},
-			axisY:{
-				includeZero: true
-			},
-			data:eval(result)//JSON.stringify(eval('('+result+')'))
+			title:{	text: "SensorData"},
+			axisY:{includeZero: true},
+			data:eval(result)
 		});
 		chart.render();
 		}
@@ -388,12 +379,9 @@ function sensorgauges(repeat){
 		loadoutputpinslist();
 		refresh="<div class=\"row\"><div class=\"col\">"
 		refresh+="<i class=\"fas fa-sync pointer fa-2x\" onclick=\"sensorgauges()\">Refresh</i>"
-			
-		/*refresh+="</div><div class=\"col\">"
-		refresh+=" <i class=\"btn pointer far fa-bell fa-2x\">Alerts</i> ";*/
 		refresh+="</div></div>"
 		$.ajax({url:"/CentralServer/SensorGauges",success : function(result){
-			$("#sensorgauges").html(refresh+result);}});
+		$("#sensorgauges").html(refresh+result);}});
 
 		if(repeat==true){
 			//console.log("sensor gauges repeat")
@@ -599,9 +587,7 @@ function addconditionout(pin){
 	time_start=$("#time_start_val").val()
 	time_end=$("#time_end_val").val()
 	val=$("#cond_pin_out_val").val()
-	if(time_end<time_start){
-		alert("Time start should be before time end")
-		return;}
+	
 	url="/CentralServer/AddConditionOut"
 	 $.post(url,
 			  {"pin": pin,

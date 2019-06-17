@@ -23,9 +23,6 @@ public class LogStatus extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String resp="";
 		//System.out.println("Logstatus");
@@ -40,8 +37,5 @@ public class LogStatus extends HttpServlet {
 		response.getWriter().append(resp);
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
-	}
 
 }

@@ -23,19 +23,11 @@ import data.UserMySQL;
 public class ConditionForm extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public ConditionForm() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+        super();}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int pin_no=Integer.parseInt(request.getParameter("pin").toString());
+		int pin_no=-1;
 		PinData sdpin=new PinMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		UserData sd=new UserMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		HttpSession s=request.getSession();
@@ -45,6 +37,9 @@ public class ConditionForm extends HttpServlet {
 			User u=sd.getUser(s.getAttribute("user").toString());
 			if(u==null) {
 				return;}
+			try {
+			pin_no=Integer.parseInt(request.getParameter("pin").toString());
+			}catch(Exception e) {return;}
 			Pin p=sdpin.getPin(pin_no, u.uid);
 			
 			if(p!=null) {

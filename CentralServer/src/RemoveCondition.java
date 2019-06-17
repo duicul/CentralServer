@@ -24,21 +24,17 @@ import data.UserMySQL;
 public class RemoveCondition extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public RemoveCondition() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+        super();}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		UserData sd=new UserMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		ConditionData sdcon=new ConditionMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		HttpSession s=request.getSession();
+		response.setHeader("Content-type", "text/plain");
+		try {
 		int cid=Integer.parseInt(request.getParameter("cid").toString());
 		int pin=Integer.parseInt(request.getParameter("pin").toString());
-		response.setHeader("Content-type", "text/plain");
 		if(s!=null&&s.getAttribute("user")!=null){
 			User u=sd.getUser(s.getAttribute("user").toString());
 			if(u!=null) {
@@ -50,6 +46,7 @@ public class RemoveCondition extends HttpServlet {
 					}
 			}
 		}
+		}catch(Exception e) {}
 		response.getWriter().append("error");
 	}
 }

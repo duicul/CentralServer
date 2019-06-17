@@ -12,6 +12,7 @@ import data.DatabaseSetup;
 import data.OutputPinData;
 import data.OutputPinMySQL;
 import data.PinOutput;
+import data.User;
 import data.UserData;
 import data.UserMySQL;
 
@@ -26,22 +27,18 @@ public class GetOutputGauge extends HttpServlet {
      * @see HttpServlet#HttpServlet()
      */
     public GetOutputGauge() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+        super();}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		OutputPinData sdin=new OutputPinMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		UserData sd=new UserMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		HttpSession s=request.getSession();
 		response.setHeader("Content-type", "text/plain");
-		try {
-			int pin=Integer.parseInt(request.getParameter("pin"));
+		try {int pin=Integer.parseInt(request.getParameter("pin"));
 			if(s!=null&&s.getAttribute("user")!=null){
-				int uid=sd.getUser(s.getAttribute("user").toString()).uid;
+				User u=sd.getUser(s.getAttribute("user").toString());
+				if(u==null)return;
+				int uid=u.uid;
 				PinOutput po=sdin.getOutputPinbyPin_no(pin, uid);
 				if(po!=null){
 					response.getWriter().append(po.getHelper(uid).getGauge());

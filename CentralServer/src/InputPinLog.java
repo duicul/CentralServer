@@ -12,6 +12,7 @@ import data.DatabaseSetup;
 import data.InputPinData;
 import data.InputPinMySQL;
 import data.Pin;
+import data.User;
 import data.UserData;
 import data.UserMySQL;
 
@@ -30,9 +31,6 @@ public class InputPinLog extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int pin_no=Integer.parseInt(request.getParameter("pin").toString());
 		System.out.println("Pin number "+pin_no);
@@ -41,20 +39,15 @@ public class InputPinLog extends HttpServlet {
 		HttpSession s=request.getSession();
 		response.setHeader("Content-type", "text/plain");
 		if(s!=null&&s.getAttribute("user")!=null)
-		{int uid=sd.getUser(s.getAttribute("user").toString()).uid;
-		Pin pi=sdin.getIntputPinbyPin_no(pin_no,uid);
-		if(pi!=null)
-		response.getWriter().append(pi.getHelper(uid).drawGraph());		
-		}
+		{User u=sd.getUser(s.getAttribute("user").toString());
+		if(u!=null) {
+				int uid=sd.getUser(s.getAttribute("user").toString()).uid;
+				Pin pi=sdin.getIntputPinbyPin_no(pin_no,uid);
+				if(pi!=null) {
+					response.getWriter().append(pi.getHelper(uid).drawGraph());		
+					return;}
+		}}
 		else  response.getWriter().append("error");
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
 	}
 
 }

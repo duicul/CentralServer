@@ -10,6 +10,7 @@ import data.DatabaseSetup;
 import data.OutputPinData;
 import data.OutputPinMySQL;
 import data.PinOutput;
+import data.User;
 import data.UserData;
 import data.UserMySQL;
 
@@ -18,6 +19,7 @@ public class OutputGauges extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
     public OutputGauges() {
+    	super();
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -27,10 +29,11 @@ public class OutputGauges extends HttpServlet {
 		StringBuilder resp=new StringBuilder();
 		response.setHeader("Content-type", "text/plain");
 		if(s!=null&&s.getAttribute("user")!=null){
-			int uid=sd.getUser(s.getAttribute("user").toString()).uid;
+			User u=sd.getUser(s.getAttribute("user").toString());
+			if(u==null)return;
+			int uid=u.uid;
 			System.out.println("output gauges");
 			for(PinOutput po:sdout.getPinsOutput(uid)) {
-				//System.out.println(po);
 				resp.append("<div class=\"row\"><div class=\"col\" id=\"out_pin_"+po.pin_no+"\">");
 				resp.append(po.getHelper(uid).getGauge());
 				resp.append("</div></div><br/>");

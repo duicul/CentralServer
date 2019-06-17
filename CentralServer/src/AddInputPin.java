@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import data.DatabaseSetup;
 import data.InputPinData;
 import data.InputPinMySQL;
+import data.User;
 import data.UserData;
 import data.UserMySQL;
 
@@ -29,28 +30,22 @@ public class AddInputPin extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		InputPinData sdin=new InputPinMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		UserData sd=new UserMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		HttpSession s=request.getSession();
 		response.setHeader("Content-type", "text/plain");
 		if(s!=null&&s.getAttribute("user")!=null)
-		{int uid=sd.getUser(s.getAttribute("user").toString()).uid;
-		sdin.insertInputPinNoLog(Integer.parseInt(request.getParameter("pin").toString()),"0 0",request.getParameter("name").toString(),request.getParameter("sensor").toString(),uid);
-		response.getWriter().append("okay");
-		return;}
+		{User u=sd.getUser(s.getAttribute("user").toString());
+		if(u!=null){
+			int uid=u.uid;
+			try {
+				sdin.insertInputPinNoLog(Integer.parseInt(request.getParameter("pin").toString()),"",request.getParameter("name").toString(),request.getParameter("sensor").toString(),uid);}
+			catch(Exception e) {response.getWriter().append("error");return;}
+			response.getWriter().append("okay");
+			return;}
+		}
 		response.getWriter().append("error");
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
 	}
 
 }

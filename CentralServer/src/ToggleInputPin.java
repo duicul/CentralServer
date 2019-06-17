@@ -12,6 +12,10 @@ import data.DatabaseSetup;
 import data.InputPinData;
 import data.InputPinMySQL;
 import data.PIR;
+import data.PinInput;
+import data.User;
+import data.UserData;
+import data.UserMySQL;
 
 /**
  * Servlet implementation class ToggleInputPin
@@ -28,22 +32,20 @@ public class ToggleInputPin extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//System.out.println("toggleoutputpin");
 		response.setHeader("Content-type", "text/plain");
 		HttpSession s=request.getSession();
 		if(s!=null&&s.getAttribute("user")!=null){
-			int uid=(int) s.getAttribute("user_uid");
+			UserData usd=new UserMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
+			User u=usd.getUser(s.getAttribute("user").toString());
+			if(u==null)return;
+			int uid=u.uid;
 			InputPinData sd=new InputPinMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 			int pin_no=-1;
-			pin_no=Integer.parseInt(request.getParameter("pin_no"));
-			//System.out.println(pin_no);
-			PIR pir=(PIR)sd.getIntputPinbyPin_no(pin_no, uid);
-			sd.updateInputPinValueNoLogNotimestamp(pin_no,pir.active?"0":"1", uid);
-			//response.getWriter().append("<div></div>");
-				}
+			try {
+			pin_no=Integer.parseInt(request.getParameter("pin_no"));}
+			catch(Exception e) {return;}
+			PinInput pir=(PinInput) sd.getIntputPinbyPin_no(pin_no, uid);
+			sd.updateInputPinValueNoLogNotimestamp(pin_no,pir.active?"0":"1", uid);}
 	}
 }

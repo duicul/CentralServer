@@ -21,10 +21,7 @@ public class Login extends HttpServlet {
     public Login() {
         super();
     }
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("get");
-		response.getWriter().append("<div></div>");
-	}
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		UserData sd=new UserMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		System.out.println("Login");

@@ -26,17 +26,7 @@ public class SignUp extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("get");
-		response.getWriter().append("<div></div>");
-	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		UserData sd=new UserMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		System.out.println("SignUp");
@@ -48,7 +38,7 @@ public class SignUp extends HttpServlet {
 		String info=request.getParameter("info");
 		response.setHeader("Content-type", "text/plain");   
 		if(user!=null&&pass!=null) {
-		if(sd.signup(user, pass, email, address, phone, info)) {
+		if(email!=null&&address!=null&&phone!=null&&info!=null&&sd.signup(user, pass, email, address, phone, info)) {
 		response.getWriter().append("okay");
 		return;}
 		}

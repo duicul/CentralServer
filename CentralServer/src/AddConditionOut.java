@@ -26,23 +26,16 @@ import data.UserMySQL;
 public class AddConditionOut extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public AddConditionOut() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+        super();   }
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ConditionData sdcon=new ConditionMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		OutputPinData sdout=new OutputPinMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		UserData sd=new UserMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		HttpSession s=request.getSession();
 		response.setHeader("Content-type", "text/plain");
+		try {
 		int pin=Integer.parseInt(request.getParameter("pin"));
 		System.out.println(request.getParameter("time_start"));
 		Time start=Time.valueOf(request.getParameter("time_start")+":00");//needs seconds
@@ -60,6 +53,8 @@ public class AddConditionOut extends HttpServlet {
 				return;
 			}
 		}
+		}
+		catch(Exception e) {}		
 		response.getWriter().append("error");
 	}
 

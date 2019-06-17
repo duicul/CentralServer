@@ -24,14 +24,11 @@ import data.UserMySQL;
 public class ConditionList extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public ConditionList() {
         super();}
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int pin_no=Integer.parseInt(request.getParameter("pin").toString());
+		int pin_no=-1;
 		PinData sdpin=new PinMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		UserData sd=new UserMySQL(DatabaseSetup.dbname,DatabaseSetup.user,DatabaseSetup.pass);
 		HttpSession s=request.getSession();
@@ -41,6 +38,9 @@ public class ConditionList extends HttpServlet {
 			User u=sd.getUser(s.getAttribute("user").toString());
 			if(u==null) {
 				return;}
+			try {
+				pin_no=Integer.parseInt(request.getParameter("pin").toString());}
+			catch(Exception e) {return;}
 			Pin p=sdpin.getPin(pin_no, u.uid);
 			if(p!=null) {
 				//System.out.println("Condition List "+p);
